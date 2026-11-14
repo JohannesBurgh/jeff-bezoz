@@ -121,11 +121,22 @@ pre{margin-top:14px;background:#0d0906;color:#f3dfb4;border-left:8px solid var(-
 .ideer{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;max-width:40em}
 .ideer span{font-family:"Courier Prime",monospace;font-weight:700;font-size:12.5px;background:var(--gradde);color:var(--brun);padding:6px 9px 4px;border-radius:2px}
 .ideer span:nth-child(odd){transform:rotate(-1.5deg)}.ideer span:nth-child(even){transform:rotate(1.2deg)}
+#knappar{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding-top:26px}
+#knappar button{max-width:none;padding:11px 6px 9px;font-size:12.5px}
+section{padding-bottom:190px}
+@media (min-width:760px){#knappar{grid-template-columns:repeat(6,150px);justify-content:center}section{padding-bottom:150px}}
+#stor{position:fixed;inset:0;z-index:4;display:grid;place-items:center;pointer-events:none;opacity:0;text-align:center;
+  font-family:"Bowlby One",sans-serif;font-size:clamp(64px,24vw,230px);line-height:.9;color:var(--gradde);
+  text-shadow:0 .05em 0 var(--orange),0 .1em 0 var(--brun),0 .2em .4em rgba(0,0,0,.6)}
+#stor.pang{animation:pang .75s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pang{0%{opacity:0;transform:scale(.3) rotate(-8deg)}18%{opacity:1;transform:scale(1.08) rotate(3deg)}70%{opacity:1;transform:scale(1) rotate(-2deg)}100%{opacity:0;transform:scale(1.25) rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){#stor.pang{animation:pangl .75s both}@keyframes pangl{0%,100%{opacity:0}20%,70%{opacity:1}}}
 </style>
 </head>
 <body>
 <canvas id="scen" aria-hidden="true"></canvas>
 <div id="blixt"></div>
+<div id="stor" aria-hidden="true"></div>
 <button id="kam" title="Byt kamera"><i></i><span id="kamtxt">KAM 1</span></button>
 <div id="takt">TAKT 1.1</div>
 
@@ -185,6 +196,8 @@ pre{margin-top:14px;background:#0d0906;color:#f3dfb4;border-left:8px solid var(-
   <button id="flippa">FLIPPA</button>
   <button id="tyrol">TYROLEN</button>
   <button id="raket">RAKET</button>
+  <button id="kartong">KARTONG</button>
+  <button id="balett">BALETT</button>
 </div>
 <div id="fel">3D-scenen kunde inte starta i den här webbläsaren.</div>
 

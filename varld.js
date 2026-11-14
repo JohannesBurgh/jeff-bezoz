@@ -101,7 +101,7 @@ window.BEZOZ_VARLD = {
   paket: [
     { nr: 'PAKET 01', rubrik: 'Låten', text: 'Tyrolerpolka i 143,6 slag per minut. Tryck LJUD här nere så dansar hela institutionen i takt.', stampel: 'LEVERERAD' },
     { nr: 'PAKET 02', rubrik: 'Flippen', text: 'Sjutton sekunder ur ett tisdagsmöte som aldrig tog slut. Tryck FLIPPA. Tryck igen, det finns mer.', stampel: 'LEVERERAD' },
-    { nr: 'PAKET 03', rubrik: 'Tyrolerutgåvan', text: 'Samma institution, fast med hatt. Bergen växer upp ur golvet. Månen har redan sin.', stampel: 'TRYCK TYROLEN' },
+    { nr: 'PAKET 03', rubrik: 'Tyrolerutgåvan', text: 'Samma institution, fast med hatt, hängslen och kor. Bergen växer upp ur golvet. Månen har redan sin hatt.', stampel: 'TRYCK TYROLEN' },
     { nr: 'PAKET 04', rubrik: 'Videon', text: 'Mötet. Skriket. Kartongen som skickas fram och tillbaka på beatet. Kontorsstolsbaletten. Uppskjutningen.', stampel: 'PÅ VÄG' },
     { nr: 'PAKET 05', rubrik: 'Byggsatsen', text: 'Hela institutionen som en mapp. Anställ egna kollegor eller starta en egen arbetsplats. Läs vidare längre ner.', stampel: 'ÖPPNAS HÄR NERE' }
   ],
