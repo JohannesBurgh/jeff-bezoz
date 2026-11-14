@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JEFF BEZOZ · Institutionen</title>
+<meta name="description" content="Institutionen för tillämpad bezozologi. En professor, ett namn, en kartong i rymden. Tryck FLIPPA.">
+<meta property="og:title" content="JEFF BEZOZ">
+<meta property="og:description" content="En professor, ett namn, en kartong i rymden. Tryck FLIPPA.">
+<meta name="theme-color" content="#130d0a">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Courier+Prime:wght@400;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --kartong:#c9a06a; --kartong-ljus:#e3c394; --kartong-mork:#8a6337;
+  --brun:#3b2616; --natt:#130d0a; --orange:#e8621c; --senap:#e2b13c;
+  --gradde:#f6ead2; --avokado:#7a8b3a; --tejp:#b98a4e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--natt);color:var(--gradde);font-family:"DM Sans",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+#scen{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+#blixt{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:1}
+main{position:relative;z-index:2}
+section{min-height:100vh;min-height:100svh;padding:72px 20px 150px;display:flex;flex-direction:column;
+  max-width:1100px;margin:0 auto}
+
+/* HUD */
+#kam{position:fixed;top:12px;left:12px;z-index:5;font-family:"Courier Prime",monospace;font-weight:700;
+  font-size:12px;letter-spacing:.08em;color:var(--natt);background:var(--senap);border:0;
+  padding:7px 10px 5px;border-radius:3px;cursor:pointer;display:flex;gap:8px;align-items:center}
+#kam i{width:8px;height:8px;border-radius:50%;background:#c21;display:inline-block;animation:rec 1s steps(2) infinite}
+@keyframes rec{50%{opacity:.15}}
+#takt{position:fixed;top:12px;right:12px;z-index:5;font-family:"Courier Prime",monospace;font-size:12px;
+  font-weight:700;letter-spacing:.08em;color:var(--gradde);background:rgba(19,13,10,.72);padding:7px 10px 5px;border-radius:3px}
+
+/* Hero */
+.etikett{align-self:flex-start;background:var(--gradde);color:var(--brun);font-family:"Courier Prime",monospace;
+  font-size:12px;line-height:1.45;padding:10px 14px;border-radius:2px;transform:rotate(-2deg);
+  box-shadow:0 6px 0 rgba(0,0,0,.25);border-left:10px solid var(--orange);max-width:290px}
+.etikett b{display:block;letter-spacing:.12em;font-size:10px;opacity:.7}
+h1{font-family:"Bowlby One",sans-serif;font-weight:400;line-height:.86;margin-top:22px;
+  font-size:clamp(56px,18vw,132px);color:var(--senap);letter-spacing:-.01em;
+  text-shadow:0 .045em 0 var(--orange),0 .09em 0 var(--brun),0 .16em .3em rgba(0,0,0,.5);
+  text-wrap:balance}
+h1 span{display:block}
+h1 .z{display:inline-block;color:var(--gradde);transform:rotate(-9deg) translateY(.03em);animation:zz 1.67s ease-in-out infinite}
+@keyframes zz{50%{transform:rotate(11deg) translateY(-.04em) scale(1.12)}}
+.under{margin-top:18px;font-size:clamp(17px,2.4vw,24px);font-weight:500;max-width:22em;line-height:1.3;
+  background:rgba(19,13,10,.74);padding:10px 14px;border-radius:4px;align-self:flex-start}
+.ner{margin-top:auto;align-self:flex-start;font-family:"Courier Prime",monospace;font-weight:700;font-size:13px;
+  letter-spacing:.1em;color:var(--natt);background:var(--gradde);padding:8px 12px 6px;border-radius:3px;text-decoration:none}
+
+h2{font-family:"Bowlby One",sans-serif;font-weight:400;font-size:clamp(34px,7vw,72px);line-height:.95;
+  color:var(--gradde);text-shadow:0 .06em 0 var(--orange),0 .12em 0 var(--brun);text-wrap:balance}
+.ingress{margin-top:14px;max-width:30em;font-size:16px;line-height:1.45;background:rgba(19,13,10,.74);
+  padding:10px 14px;border-radius:4px;align-self:flex-start}
+
+/* Personalkort */
+.kort{margin-top:auto;display:flex;gap:12px;overflow-x:auto;padding:14px 20px 10px;margin-left:-20px;margin-right:-20px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.kort::-webkit-scrollbar{display:none}
+.k{flex:0 0 220px;scroll-snap-align:center;text-align:left;border:0;cursor:pointer;color:var(--brun);
+  background:var(--kartong-ljus);padding:14px 14px 12px;border-radius:3px;position:relative;font:inherit;
+  box-shadow:0 5px 0 var(--kartong-mork);
+  background-image:repeating-linear-gradient(90deg,rgba(90,58,34,.07) 0 2px,transparent 2px 7px)}
+.k::before{content:"";position:absolute;left:0;right:0;top:0;height:9px;background:var(--tejp);opacity:.75}
+.k.vald{outline:4px solid var(--orange);transform:translateY(-4px)}
+.k small{font-family:"Courier Prime",monospace;font-weight:700;font-size:10px;letter-spacing:.12em;display:block;margin-top:6px}
+.k strong{font-family:"Bowlby One",sans-serif;font-weight:400;font-size:23px;line-height:1;display:block;margin:4px 0 8px}
+.k p{font-size:13.5px;line-height:1.35}
+.k em{display:inline-block;margin-top:10px;font-style:normal;font-family:"Courier Prime",monospace;font-weight:700;
+  font-size:11px;background:var(--brun);color:var(--gradde);padding:3px 7px 2px;border-radius:2px}
+
+/* Släpp */
+.slapp{margin-top:26px;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.s{background:rgba(19,13,10,.82);border:2px dashed var(--kartong);border-radius:4px;padding:14px 14px 12px}
+.s b{font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:.14em;color:var(--senap)}
+.s h3{font-family:"Bowlby One",sans-serif;font-weight:400;font-size:22px;margin:4px 0 6px;color:var(--gradde)}
+.s p{font-size:14px;line-height:1.4;color:#e9d9bb}
+.stampel{display:inline-block;margin-top:10px;font-family:"Courier Prime",monospace;font-weight:700;font-size:12px;
+  letter-spacing:.14em;color:var(--orange);border:2px solid var(--orange);padding:3px 8px 1px;transform:rotate(-4deg);border-radius:3px}
+footer{margin-top:40px;font-family:"Courier Prime",monospace;font-size:12px;line-height:1.5;color:#d9c7a4;
+  background:rgba(19,13,10,.74);padding:10px 14px;border-radius:4px;max-width:34em}
+
+/* Knapprad */
+#knappar{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:8px;justify-content:center;
+  padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(transparent,rgba(19,13,10,.9) 45%)}
+#knappar button,#knappar label{font-family:"Bowlby One",sans-serif;font-size:13px;letter-spacing:.03em;border:0;cursor:pointer;
+  padding:13px 12px 11px;border-radius:4px;color:var(--brun);background:var(--kartong-ljus);
+  box-shadow:0 4px 0 var(--kartong-mork);flex:1 1 0;max-width:170px;text-align:center;white-space:nowrap}
+#knappar button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--kartong-mork)}
+#knappar .pa{background:var(--senap)}
+#flippa{background:var(--orange)!important;color:#fff!important;box-shadow:0 4px 0 #8f3408!important}
+#knappar input{display:none}
+body.gabber h1{animation:skak .09s linear infinite}
+@keyframes skak{0%{transform:translate(3px,-2px) rotate(-1deg)}50%{transform:translate(-3px,2px) rotate(1deg)}100%{transform:translate(2px,3px)}}
+#fel{position:fixed;inset:auto 12px 90px 12px;z-index:7;background:var(--gradde);color:var(--brun);padding:12px;border-radius:4px;display:none;font-size:14px}
+@media (prefers-reduced-motion:reduce){h1 .z,body.gabber h1,#kam i{animation:none}}
+@media (min-width:800px){section{padding:90px 40px 150px}.kort{margin-left:-40px;margin-right:-40px;padding-left:40px}}
+
+.k img{width:74px;height:74px;border-radius:3px;object-fit:cover;display:block;margin-top:6px;border:3px solid var(--gradde);
+  transform:rotate(-3deg);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.k{flex-basis:232px}
+/* Byggsatsen */
+.delar{margin-top:22px;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.d{background:var(--kartong-ljus);color:var(--brun);border-radius:3px;padding:12px 14px 12px;box-shadow:0 5px 0 var(--kartong-mork);
+  background-image:repeating-linear-gradient(90deg,rgba(90,58,34,.07) 0 2px,transparent 2px 7px)}
+.d code{font-family:"Courier Prime",monospace;font-weight:700;font-size:15px;display:block;margin-bottom:4px}
+.d p{font-size:13.5px;line-height:1.35}
+.steg{margin-top:18px;background:rgba(19,13,10,.82);border-radius:4px;padding:14px 16px;max-width:36em;counter-reset:st}
+.steg p{font-size:15px;line-height:1.4;padding:6px 0 6px 38px;position:relative;counter-increment:st}
+.steg p::before{content:counter(st);position:absolute;left:0;top:4px;width:26px;height:26px;border-radius:50%;background:var(--senap);color:var(--natt);
+  font-family:"Bowlby One",sans-serif;font-size:14px;display:grid;place-items:center}
+pre{margin-top:14px;background:#0d0906;color:#f3dfb4;border-left:8px solid var(--orange);border-radius:3px;padding:12px 14px;font-family:"Courier Prime",monospace;
+  font-size:12.5px;line-height:1.45;overflow-x:auto;max-width:36em;white-space:pre}
+.kop{margin-top:10px;align-self:flex-start;font-family:"Bowlby One",sans-serif;font-size:13px;border:0;cursor:pointer;padding:12px 14px 10px;border-radius:4px;
+  color:var(--brun);background:var(--senap);box-shadow:0 4px 0 #8a6a1c}
+.kop:active{transform:translateY(3px);box-shadow:0 1px 0 #8a6a1c}
+.ideer{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;max-width:40em}
+.ideer span{font-family:"Courier Prime",monospace;font-weight:700;font-size:12.5px;background:var(--gradde);color:var(--brun);padding:6px 9px 4px;border-radius:2px}
+.ideer span:nth-child(odd){transform:rotate(-1.5deg)}.ideer span:nth-child(even){transform:rotate(1.2deg)}
+</style>
+</head>
+<body>
+<canvas id="scen" aria-hidden="true"></canvas>
+<div id="blixt"></div>
+<button id="kam" title="Byt kamera"><i></i><span id="kamtxt">KAM 1</span></button>
+<div id="takt">TAKT 1.1</div>
+
+<main>
+<section id="topp">
+  <div class="etikett"><b>AVSÄNDARE</b><span id="avs"></span><b style="margin-top:6px">MOTTAGARE</b><span id="mot"></span></div>
+  <h1 id="titel"></h1>
+  <p class="under" id="under"></p>
+  <a class="ner" href="#personal">↓ ÖPPNA KARTONGEN</a>
+</section>
+
+<section id="personal">
+  <h2>Personalen på institutionen</h2>
+  <p class="ingress">Tryck på ett kort så åker kameran dit. Alla flossar i tjänsten.</p>
+  <div class="kort" id="kort"></div>
+</section>
+
+<section id="slapp">
+  <h2>Så släpps flippen</h2>
+  <p class="ingress">Ett paket i taget. Inget kan returneras.</p>
+  <div class="slapp" id="paket"></div>
+</section>
+
+<section id="byggsats">
+  <h2>Byggsatsen</h2>
+  <p class="ingress">Hela institutionen är en textfil. Byt en gubbe, byt låten, starta en egen institution. Världen får gärna bli större än vi har tänkt.</p>
+  <div class="delar">
+    <div class="d"><code>varld.js</code><p>Allt som går att ändra utan att kunna koda: personalen, kläderna, texterna, kamerorna, låten.</p></div>
+    <div class="d"><code>motor.js</code><p>Bygger rummet och dockorna och sköter dansstegen. Här lägger du till egna steg och egen rekvisita.</p></div>
+    <div class="d"><code>lat/</code><p>Låten. Lägg dit en egen, skriv in tempot, så dansar alla i den takten i stället.</p></div>
+    <div class="d"><code>material/</code><p>Flippljudet, helt och i tre delar. Det är kärnan. Ta det och låt vem som helst flippa.</p></div>
+    <div class="d"><code>portratt/</code><p>Passfoton till personalkorten. Kvadratiska, 240 pixlar räcker.</p></div>
+  </div>
+  <a class="kop" id="hamta" href="#" download style="text-decoration:none;margin-top:18px">HÄMTA BYGGSATSEN</a>
+  <span class="stampel" id="ejan" style="align-self:flex-start;margin-top:18px;background:rgba(19,13,10,.82)">PACKAD, INTE UTLÄMNAD ÄN</span>
+  <div class="steg">
+    <p>Packa upp mappen och öppna <b>index.html</b> i webbläsaren. Institutionen startar.</p>
+    <p>Öppna <b>varld.js</b> i en textredigerare. Klistra in en ny person i listan <b>personal</b>.</p>
+    <p>Spara och ladda om. Din nyanställda flossar redan.</p>
+  </div>
+  <pre id="mall">{ namn: 'Gunvor', befattning: 'TANDHYGIENIST',
+  bio: 'Skriv något här.', stampel: 'NY PÅ JOBBET',
+  dans: 'floss', plats: [0, 4.2],
+  utseende: { hud: '#e8b79c', overdel: '#7fc4c0',
+    byxa: '#f2f2f2', skor: '#f4f4f4',
+    har: { typ: 'lockig-uppsatt', farg: '#d8d0c0' },
+    glas: 'runda', glasfarg: '#c0261b',
+    extra: ['nyckelband', 'penna-i-haret'] } },</pre>
+  <button class="kop" id="kop">KOPIERA EN NYANSTÄLLD</button>
+  <div class="ideer"><span>TANDLÄKARMOTTAGNINGEN SOM FLIPPAR</span><span>KOMMUNFULLMÄKTIGE I GABBER</span><span>BOSTADSRÄTTSFÖRENINGENS ÅRSSTÄMMA</span><span>KÖRSKOLAN</span><span>DIN EGEN ARBETSPLATS</span></div>
+  <footer id="finstilt"></footer>
+</section>
+</main>
+
+<div id="knappar">
+  <button id="ljud">♪ LJUD</button>
+  <button id="flippa">FLIPPA</button>
+  <button id="tyrol">TYROLEN</button>
+  <button id="raket">RAKET</button>
+</div>
+<div id="fel">3D-scenen kunde inte starta i den här webbläsaren.</div>
+
+<script src="three.min.js"></script>
+<script src="varld.js"></script>
+<script src="motor.js"></script>
+<script>
+(function(){var k=document.getElementById('kop'),m=document.getElementById('mall');if(!k){return;}
+k.onclick=function(){var klart=function(){k.textContent='KOPIERAD';setTimeout(function(){k.textContent='KOPIERA EN NYANSTÄLLD';},1600);};
+  try{navigator.clipboard.writeText(m.textContent).then(klart,function(){k.textContent='MARKERA TEXTEN OCH KOPIERA';});}catch(e){k.textContent='MARKERA TEXTEN OCH KOPIERA';}};})();
+</script>
+</body>
+</html>
