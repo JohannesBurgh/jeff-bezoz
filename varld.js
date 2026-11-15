@@ -99,11 +99,17 @@ window.BEZOZ_VARLD = {
     { namn: 'HELBILD',      p: [0, 7.5, 17.5],   l: [0, 2.4, 0],        vid: true, upp: 5 },
     { namn: 'PROFESSORN',   p: [0.6, 3.7, 4.9],  l: [0, 2.7, 0],        upp: 0.6 },
     { namn: 'FLOSSLINJEN',  p: [-6.4, 2.2, 6.6], l: [0.5, 1.4, 2.8],    upp: 1 },
-    { namn: 'OVERHEAD',     p: [0, 17, 2.2],     l: [0, 0, 0.6],        vid: true },
-    { namn: 'TVÄTTBJÖRNEN', p: [-5.2, 2.5, 0.2], l: [-6.6, 1.2, -2.6],  upp: 0.3 },
-    { namn: 'STATYN',       p: [-3.3, 2.9, 0.3], l: [-6.5, 2.0, -4.05], upp: 0.9 },
-    { namn: 'RAKETEN',      p: [1.6, 3.4, 1.6],  l: [6.4, 2.4, -2.2],   upp: 1 }   // raketen ska stå sist
+    { namn: 'STATYN',       p: [1.5, 3.1, 3.7],  l: [-2.2, 2.4, -1.6],  upp: 0.6 },   // statyn bakom professorn
+    { namn: 'OVANIFRÅN',    p: [0, 13.5, 10.5],  l: [0, 0.6, 0.2],      vid: true, upp: 2 },
+    { namn: 'TVÄTTBJÖRNEN', p: [3.2, 2.1, -0.7], l: [4.9, 1.3, -3.1],   upp: 0.4 },   // björnen med raketen bredvid
+    { namn: 'RAKETEN',      p: [1.6, 3.4, 1.6],  l: [6.4, 2.4, -2.2],   upp: 1, auto: false }   // auto: false = bara vid uppskjutning
   ],
+  /* ---------- INTROT ----------  låtens första sekunder är flippen: kameran följer professorn och de andra står och tittar */
+  intro: { till: 15, kameror: [
+    { p: [0.6, 3.7, 4.9],   l: [0, 2.7, 0],  upp: 0.6 },
+    { p: [-2.9, 1.5, 1.9],  l: [0, 2.9, 0],  upp: 0.4 },
+    { p: [0.7, 3.3, 2.3],   l: [0, 3.05, 0], upp: 0.3 }
+  ] },
   takter_per_kamera: 8,
   takter_helbild_vid_scroll: 32,   // så länge står kameran still i helbild efter att man scrollat
   nedrakning: 5,             // raketen räknar ner från den här siffran, en siffra varannan takt
@@ -118,5 +124,5 @@ window.BEZOZ_VARLD = {
     { nr: 'PAKET 05', rubrik: 'Din egen flipp', text: 'Flippen och låten går att hämta längst ner. Gör en egen musikvideo. Vem som flippar bestämmer du.', stampel: 'HÄMTA LÄNGST NER' }
   ],
   byggsats_lank: 'https://github.com/JohannesBurgh/jeff-bezoz/archive/refs/heads/main.zip',         // adressen till zip-filen. Tom rad = ingen nedladdningsknapp
-  finstilt: 'Ingen miljardär har medverkat, tillfrågats eller märkt något. Jeff Bezoz stavas med z med flit. Alla personer på institutionen är påhittade, inklusive tvättbjörnarna.'
+  finstilt: 'Ingen miljardär har medverkat, tillfrågats eller märkt något. Jeff Bezoz stavas med z med flit. Alla personer på institutionen är påhittade, inklusive tvättbjörnen.'
 };

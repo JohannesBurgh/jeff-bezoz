@@ -221,7 +221,7 @@ folk.forEach(function(p){if(p.d.dans==='flipp'){p.tunga.visible=true;}});
 
 /* ---------- dansstegen ----------  egna steg läggs till här: DANS.namn=function(p,k){...} */
 var DANS={
-  floss:function(p,k){var m=k.matt===undefined?1:k.matt, ps=Math.tanh(Math.sin((k.db+p.fas)*Math.PI)*2.6)/.989, up=ps>0;
+  floss:function(p,k){var m=k.intro?.03:(k.matt===undefined?1:k.matt), mal=k.intro?Math.atan2(-p.g.position.x,-p.g.position.z):0, ps=Math.tanh(Math.sin((k.db+p.fas)*Math.PI)*2.6)/.989, up=ps>0;
     /* höften åt ena hållet, raka armar åt andra: armen på den sidan går bakom kroppen, den andra korsar framför */
     p.hips.position.x=ps*.2*m;p.hips.rotation.z=-ps*.17*m;p.hips.position.y=.95-(1-Math.abs(ps))*.07*m;
     p.bal.rotation.z=ps*.1*m;p.bal.rotation.y=-ps*.14*m;p.bal.rotation.x=.05*m;
@@ -229,7 +229,8 @@ var DANS={
     p.aR.rotation.z=-ps*(up?.86:.42)*m;p.aR.rotation.x=-ps*(up?.52:.62)*m;
     p.bL.rotation.z=ps*.13*m;p.bR.rotation.z=ps*.13*m;p.hals.rotation.z=ps*.16*m;p.hals.rotation.x=m<.5?k.puls*.12:0;
     p.mun.scale.set(1,m<.5?.15:.3+k.puls*.5,.6);
-    p.g.rotation.y=k.G?Math.sin(k.b*Math.PI/2+p.fas*2)*.6:(k.tyrol?Math.sin(k.b*Math.PI/4+p.fas*2)*.3:0);
+    p.vrid=(p.vrid||0)+(mal-(p.vrid||0))*Math.min(1,k.dt*5);
+    p.g.rotation.y=p.vrid+(k.G?Math.sin(k.b*Math.PI/2+p.fas*2)*.6:(k.tyrol?Math.sin(k.b*Math.PI/4+p.fas*2)*.3:0));
     p.g.position.y=p.y0+(k.G?Math.abs(Math.sin(k.db*Math.PI))*.35:0);},
   'stel-sen-floss':function(p,k){k.matt=(!k.G&&(k.hel%32)<8)?.04:1;DANS.floss(p,k);k.matt=undefined;},
   flipp:function(p,k){var sk=Math.sin(k.nu*31)*.06*(.4+k.puls), sv=Math.sin(k.db*Math.PI);
@@ -251,7 +252,7 @@ function bjorn(x,z,ry,off){var g=new T.Group();g.position.set(x,0,z);g.rotation.
   box(.52,.13,.1,mk,0,.05,.24,hd);sph(.05,vit,-.12,.05,.3,hd);sph(.05,vit,.12,.05,.3,hd);sph(.022,svart,-.12,.05,.345,hd);sph(.022,svart,.12,.05,.345,hd);
   var n=sph(.12,M(0xdddddd),0,-.09,.24,hd);n.scale.set(1,.7,1);sph(.04,svart,0,-.06,.36,hd);
   var h=hatt(hd);h.position.y=.24;h.scale.setScalar(.8);return {hd:hd,off:off,hatt:h};}
-var bjornar=[bjorn(-6.6,-2.6,.5,0),bjorn(-6.9,3.6,1.2,1),bjorn(4.3,-3.4,-.3,2)];
+var bjornar=[bjorn(4.3,-3.4,-.3,2)];
 
 /* ---------- kartongraketen ---------- */
 var raket=new T.Group();raket.position.set(6.4,0,-2.2);rum.add(raket);
@@ -262,7 +263,7 @@ box(1.12,.16,1.12,mTejp,0,2.3,0,raket);box(1.12,.16,1.12,mTejp,0,.9,0,raket);
 skylt(V.skyltar.raket,1,.5,0,1.6,.56,0,'#f6ead2','#3b2616',raket);
 var eld=new T.Mesh(new T.ConeGeometry(.45,1.6,7),new T.MeshBasicMaterial({color:0xffb020}));eld.rotation.x=Math.PI;eld.position.y=-.5;eld.visible=false;raket.add(eld);
 var rok=[];for(i=0;i<18;i++){var r=box(.3,.3,.3,M(0xf6ead2),0,-50,0,rum);r.castShadow=false;rok.push({m:r,t:9});}
-var rk={laget:0,t:0,v:0,y:0,start:0,sist:-1}, ETT=new T.Vector3(1,1,1), traff=0, manKam=0, manPaket=[];
+var rk={laget:0,t:0,v:0,y:0,start:0,sist:-1}, ETT=new T.Vector3(1,1,1), UPP=new T.Vector3(0,1,0), RIKT=new T.Vector3(), KNUFF=new T.Vector3(), traff=0, manKam=0, manPaket=[];
 
 /* ---------- rymden och alperna ---------- */
 var sp=new Float32Array(900*3);for(i=0;i<900;i++){a=rnd(0,6.283);var e=rnd(-.4,1.3),R=rnd(90,140);
@@ -294,13 +295,16 @@ var sejdlar=[];[-2.3,-.9,1.1,2.6].forEach(function(x,n){var g=new T.Group();g.po
   cyl(.11,.1,.3,M(0xd9c9a0),0,.15,0,g,10);cyl(.115,.115,.07,vit,0,.33,0,g,10);box(.04,.16,.04,M(0xd9c9a0),.15,.15,0,g);sejdlar.push(g);});
 
 /* ---------- kameror ---------- */
-var skott=V.kameror.map(function(k){return {n:k.namn,p:k.p,l:k.l,vid:k.vid,upp:k.upp};}), NK=skott.length, persKam=[];
+var skott=V.kameror.map(function(k){return {n:k.namn,p:k.p,l:k.l,vid:k.vid,upp:k.upp,auto:k.auto!==false};}), persKam=[];
+var RUNDA=[];skott.forEach(function(k,n){if(k.auto){RUNDA.push(n);}});var NK=RUNDA.length;
+function kamNr(namn,reserv){for(var n=0;n<skott.length;n++){if(skott[n].n===namn){return n;}}return Math.min(reserv||0,skott.length-1);}
+var K_PROF=kamNr('PROFESSORN',1), K_OVAN=kamNr('OVANIFRÅN',0), K_RAKET=kamNr('RAKETEN',skott.length-1);
 folk.forEach(function(f){var x=f.d.plats[0],z=f.d.plats[1];
-  if(f.d.pa_bordet){persKam.push(Math.min(1,NK-1));}
+  if(f.d.pa_bordet){persKam.push(K_PROF);}
   else{skott.push({n:f.d.namn.toUpperCase(),p:[x*1.05+.6,1.9,z+3.4],l:[x,1.45,z],dold:true,upp:.8});persKam.push(skott.length-1);}});
 var sk=0, last=0, cp=new T.Vector3(0,9,22), cl=new T.Vector3(0,2,0), tp=new T.Vector3(), tl=new T.Vector3(), kamtxt=$('kamtxt');
-function valj(n,hall){sk=n;last=hall||0;var S=skott[n];kamtxt.textContent=(S.dold?'KAM ★':'KAM '+(n+1)+'/'+NK)+' · '+S.n;}
-function nastaKam(){return sk>=NK-1?0:sk+1;}
+function valj(n,hall){sk=n;last=hall||0;var S=skott[n], pl=RUNDA.indexOf(n);kamtxt.textContent=(pl<0?'KAM ★':'KAM '+(pl+1)+'/'+NK)+' · '+S.n;}
+function nastaKam(){var pl=RUNDA.indexOf(sk);return RUNDA[(pl+1)%NK];}
 $('kam').onclick=function(){valj(nastaKam(),16);markera(-1);};
 
 /* ---------- personalkort ---------- */
@@ -360,8 +364,8 @@ $('flippa').onclick=function(){
     try{flNu.a.currentTime=0;}catch(e){}
     try{var fp=flNu.a.play();if(fp&&fp.catch){fp.catch(function(){});}}catch(e){}volym();
     flNu.a.onended=flippSlut;gabber=Math.max(4,Math.ceil((flNu.f.langd||6)/SPB));}
-  document.body.classList.add('gabber');valj(Math.min(1,NK-1),16);markera(-1);};
-$('raket').onclick=function(){if(rk.laget===0){ljudmotor();rensaLador();rk.laget=1;rk.start=Math.floor(slagNu())+1;rk.sist=-1;volym();valj(NK-1,34);markera(-1);}};
+  document.body.classList.add('gabber');valj(K_PROF,16);markera(-1);};
+$('raket').onclick=function(){if(rk.laget===0){ljudmotor();rensaLador();rk.laget=1;rk.start=Math.floor(slagNu())+1;rk.sist=-1;volym();valj(K_RAKET,34);markera(-1);}};
 /* kartongregn: varje tryck släpper ner fler kartonger som studsar runt i takt. Nollställs när man byter läge */
 var linje=folk.filter(function(p){return p.d.dans!=='flipp';}).sort(function(a,b){return a.d.plats[0]-b.d.plats[0];}), lador=[], tryck=0;
 function slappLada(){var st=rnd(.34,.78), m=box(st,st*rnd(.7,1),st,mKartong,rnd(-6.6,6.6),rnd(9,15),rnd(-3.8,4.3),rum);m.castShadow=false;
@@ -373,13 +377,13 @@ $('kartong').onclick=function(){ljudmotor();tryck++;var n=Math.min(1+Math.floor(
   if(tryck===1){valj(0,16);markera(-1);}};
 /* stolbaletten */
 var balett=false, balK=0, bBa=$('balett'), hemStol=stolar.map(function(st){return [st.position.x,st.position.z,st.rotation.y];});
-bBa.onclick=function(){rensaLador();balett=!balett;bBa.classList.toggle('pa',balett);if(balett){ljudmotor();stor('BALETT');valj(Math.min(3,NK-1),16);markera(-1);}};
+bBa.onclick=function(){rensaLador();balett=!balett;bBa.classList.toggle('pa',balett);if(balett){ljudmotor();stor('BALETT');valj(K_OVAN,16);markera(-1);}};
 
 /* ---------- scroll: lugn helbild medan man läser, sedan börjar kamerorna växla igen ---------- */
 var merEl=$('mer');
 addEventListener('scroll',function(){if(merEl){merEl.classList.toggle('borta',scrollY>50);}
   if(kortY!==null){if(Math.abs(scrollY-kortY)<240){return;}kortY=null;markera(-1);}
-  if(rk.laget!==0||gabber>0){return;}
+  if(rk.laget!==0||gabber>0||varIntro){return;}
   if(sk!==0){valj(0,V.takter_helbild_vid_scroll||32);}else{last=Math.max(last,V.takter_helbild_vid_scroll||32);}},{passive:true});
 
 /* ---------- storlek ---------- */
@@ -390,18 +394,19 @@ function storlek(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);ca
 addEventListener('resize',storlek);storlek();
 
 /* ---------- bildrutan ---------- */
-var blixt=$('blixt'), takt=$('takt'), forra=performance.now()/1000, senSlag=-1, puls=0, TPK=V.takter_per_kamera||8;
+var varIntro=false, blixt=$('blixt'), takt=$('takt'), forra=performance.now()/1000, senSlag=-1, puls=0, TPK=V.takter_per_kamera||8;
 function bild(){
   requestAnimationFrame(bild);
   var nu=performance.now()/1000, dt=Math.min(.05,nu-forra);forra=nu;
-  var b=slagNu(), hel=Math.floor(b), nytt=false;
+  var b=slagNu(), hel=Math.floor(b), nytt=false, IN=V.intro||{}, intro=spelar&&ljud.currentTime<(IN.till||0)&&rk.laget===0&&gabber<=0;
+  if(intro!==varIntro){varIntro=intro;if(intro){kamtxt.textContent='KAM ★ · FLIPPEN';markera(-1);}else if(spelar&&rk.laget===0&&gabber<=0){valj(0,TPK);}else{valj(sk,last);}}
   if(hel!==senSlag){senSlag=hel;puls=1;nytt=true;
     if(gabber>0){gabber--;if(ac){try{spark(ac.currentTime+.01);spark(ac.currentTime+.01+SPB/2);}catch(e){}}
       if(gabber===0){document.body.classList.remove('gabber');if(flNu){try{flNu.a.pause();}catch(e){}flippSlut();}}}
-    if(last>0){last--;}else if(hel%TPK===0){valj(nastaKam(),0);markera(-1);}
+    if(intro){}else if(last>0){last--;}else if(hel%TPK===0){valj(nastaKam(),0);markera(-1);}
     takt.textContent=(gabber>0?'GABBER · ':tyrol?'TYROLEN · ':'')+'TAKT '+(Math.floor(hel/4)%99+1)+'.'+(hel%4+1);}
   puls*=Math.pow(.004,dt);
-  var G=gabber>0, db=G?b*2:b, k={b:b,db:db,hel:hel,puls:puls,nu:nu,dt:dt,G:G,tyrol:tyrol,skrik:-1};
+  var G=gabber>0, db=G?b*2:b, k={b:b,db:db,hel:hel,puls:puls,nu:nu,dt:dt,G:G,tyrol:tyrol,skrik:-1,intro:intro};
   if(flNu&&flNu.f.mun&&!flNu.a.paused){var mi=flNu.a.currentTime*20, m0=flNu.f.mun[Math.floor(mi)]||0, m1=flNu.f.mun[Math.floor(mi)+1];k.skrik=m0+((m1===undefined?m0:m1)-m0)*(mi%1);}
   folk.forEach(function(p){(DANS[p.d.dans]||DANS.floss)(p,k);p.hopp*=Math.pow(.002,dt);p.g.position.y+=p.hopp*.3;
     if(rk.laget>=2){p.hals.rotation.x=-.85;p.hals.rotation.z*=.3;}});
@@ -441,15 +446,25 @@ function bild(){
       else{stor('IVÄG');rk.laget=2;rk.v=4;volym();muller(2.6);if(ac){pip(880,ac.currentTime+.01,.5,.2,'square');}folk.forEach(function(p){p.hopp=1.2;});}}
     eld.scale.y=.25+Math.random()*.3+Math.max(0,steg)*.16;}
   else if(rk.laget===2){rk.v+=dt*30;rk.y+=rk.v*dt;eld.scale.y=1.2+Math.random();raket.rotation.y+=dt*4;
-    if(rk.y>75){rk.laget=3;rk.t=0;rk.y=200;eld.visible=false;traff=1;manKam=2.1;stor('PANG');duns();
-      if(manPaket.length<12){var va2=rnd(-1.1,1.1),vb=rnd(-.2,1.2),mp=box(.9,.8,.9,mKartong,Math.sin(va2)*Math.cos(vb)*2.6,Math.sin(vb)*2.6-.4,Math.cos(va2)*Math.cos(vb)*2.6,mane);mp.rotation.set(rnd(0,3),rnd(0,3),rnd(0,3));manPaket.push(mp);}}}
-  else if(rk.laget===3){rk.t+=dt;if(rk.t>2.1&&rk.y>100){rk.y=62;stor('RETUR');}
-    if(rk.t>2.1){rk.y-=dt*38;raket.rotation.z=Math.sin(nu*8)*.25;}
-    if(rk.y<=0){rk.y=0;rk.laget=0;raket.rotation.z=0;raket.rotation.y=0;puls=1.6;raket.scale.set(1.3,.5,1.3);duns();folk.forEach(function(p){p.hopp=1.4;});}}
+    if(rk.y>75){rk.laget=3;rk.t=0;rk.slog=false;manKam=3.1;raket.rotation.set(0,0,0);
+      /* anflygning: snett nerifrån sett från kameran, så banan syns tvärs över bilden */
+      var cx=mane.position.x*.45, cz=mane.position.z*.45, dx0=mane.position.x-cx, dz0=mane.position.z-cz, dn=Math.sqrt(dx0*dx0+dz0*dz0)||1;
+      rk.o=new T.Vector3(-dz0/dn*-11,-9,dx0/dn*-11);rk.rv=new T.Vector3();}}
+  else if(rk.laget===3){rk.t+=dt;var AN=1.15;
+    if(rk.t<AN){var e3=rk.t/AN;e3=e3*e3;raket.position.copy(mane.position).addScaledVector(rk.o,1-e3*.82);rk.y=raket.position.y;
+      raket.quaternion.setFromUnitVectors(UPP,RIKT.copy(rk.o).multiplyScalar(-1).normalize());eld.visible=true;eld.scale.y=1.4+Math.random();}
+    else if(!rk.slog){rk.slog=true;traff=1;duns();eld.visible=false;if(!lugn){blixt.style.opacity=.5;}
+      rk.rv.copy(rk.o).normalize().multiplyScalar(9);rk.rv.y+=6;rk.pp=raket.position.clone();
+      if(manPaket.length<12){var va2=rnd(-1.1,1.1),vb=rnd(-.2,1.2),mp=box(.9,.8,.9,mKartong,Math.sin(va2)*Math.cos(vb)*2.6,Math.sin(vb)*2.6-.4,Math.cos(va2)*Math.cos(vb)*2.6,mane);mp.rotation.set(rnd(0,3),rnd(0,3),rnd(0,3));manPaket.push(mp);}
+      rok.forEach(function(q){q.t=0;q.m.position.copy(rk.pp);q.vx=rnd(-7,7);q.vz=rnd(-7,7);q.vy=rnd(2,9);q.fri=true;});}
+    else if(rk.t<3.1){rk.rv.y-=dt*16;rk.pp.addScaledVector(rk.rv,dt);raket.position.copy(rk.pp);rk.y=rk.pp.y;raket.rotation.x+=dt*7;raket.rotation.z+=dt*5;}
+    else if(!rk.retur){rk.retur=true;raket.rotation.set(0,0,0);raket.position.set(6.4,62,-2.2);rk.y=62;stor('RETUR');}
+    else{rk.y-=dt*38;raket.position.x=6.4;raket.position.z=-2.2;raket.rotation.z=Math.sin(nu*8)*.25;
+      if(rk.y<=0){rk.y=0;rk.laget=0;rk.retur=false;raket.rotation.set(0,0,0);puls=1.6;raket.scale.set(1.3,.5,1.3);duns();folk.forEach(function(p){p.hopp=1.4;});}}}
   traff*=Math.pow(.08,dt);manKam=Math.max(0,manKam-dt);mm.scale.set(1.4-traff*.7,.5+traff*1.1,.5);
-  raket.position.y=rk.y;raket.scale.lerp(ETT,.12);
-  if(rk.laget===1||rk.laget===2){for(var n=0;n<2;n++){var q=rok[(Math.random()*rok.length)|0];if(q.t>1.2){q.t=0;q.m.position.set(6.4+rnd(-.3,.3),rk.y+.2,-2.2+rnd(-.3,.3));q.vx=rnd(-2.5,2.5);q.vz=rnd(-2.5,2.5);}}}
-  rok.forEach(function(q){if(q.t<1.5){q.t+=dt;q.m.position.x+=q.vx*dt;q.m.position.z+=q.vz*dt;q.m.position.y=Math.max(.2,q.m.position.y-dt*3);
+  if(rk.laget!==3||rk.retur){raket.position.y=rk.y;}raket.scale.lerp(ETT,.12);
+  if(rk.laget===1||rk.laget===2){for(var n=0;n<2;n++){var q=rok[(Math.random()*rok.length)|0];if(q.t>1.2){q.t=0;q.fri=false;q.m.position.set(6.4+rnd(-.3,.3),rk.y+.2,-2.2+rnd(-.3,.3));q.vx=rnd(-2.5,2.5);q.vz=rnd(-2.5,2.5);}}}
+  rok.forEach(function(q){if(q.t<1.5){q.t+=dt;q.m.position.x+=q.vx*dt;q.m.position.z+=q.vz*dt;if(q.fri){q.vy-=dt*9;q.m.position.y+=q.vy*dt;}else{q.m.position.y=Math.max(.2,q.m.position.y-dt*3);}
     q.m.scale.setScalar(Math.max(.01,1.4-q.t)*1.6);q.m.rotation.x+=dt*4;}else{q.m.position.y=-50;}});
   /* rymd / tyrol */
   tyrolK+=((tyrol?1:0)-tyrolK)*Math.min(1,dt*2.2);
@@ -460,15 +475,17 @@ function bild(){
   kor.forEach(function(kk2,n){var kv2=kk2.v+nu*.12*(n%2?1:-1), kr=22+n*4;kk2.g.position.set(Math.cos(kv2)*kr,-10+Math.abs(Math.sin(b*Math.PI+n))*1.2,Math.sin(kv2)*kr);
     kk2.g.rotation.y=-kv2+(n%2?-1.57:1.57)+1.57;kk2.g.scale.setScalar(1.7*tyrolK+.001);kk2.hd.rotation.z=Math.sin(b*Math.PI+n)*.25;kk2.kl.rotation.z=Math.sin(b*Math.PI*2)*.6;});
   sejdlar.forEach(function(sj,n){var x=tyrol?Math.min(1,Math.max(0,(tyrolT-.5-n*.12)/.3)):tyrolK;sj.scale.setScalar(Math.max(.001,x*(1+puls*.25)));sj.position.y=1.03+(G?Math.abs(Math.sin(db*Math.PI+n))*.6:0);});
-  var ma=nu*.11;mane.position.set(Math.cos(ma)*30,13+Math.sin(ma*2)*2,Math.sin(ma)*30-6);mane.lookAt(0,3,0);mane.scale.setScalar(1+puls*.06+traff*.35);
+  var ma=nu*.11;mane.position.set(Math.cos(ma)*30,13+Math.sin(ma*2)*2,Math.sin(ma)*30-6);if(rk.o&&traff>.02){mane.position.addScaledVector(KNUFF.copy(rk.o).normalize(),-traff*2.2);}mane.lookAt(0,3,0);mane.rotateZ(traff*.9);mane.scale.setScalar(1+puls*.06+traff*.35);
   flyt.forEach(function(o){o.a+=o.sp*dt;o.m.position.set(Math.cos(o.a)*o.r,o.y+Math.sin(nu*.4+o.r)*.8,Math.sin(o.a)*o.r);o.m.rotation.x+=o.rx*dt;o.m.rotation.y+=o.ry*dt;});
   regn.forEach(function(o){if(G){o.y-=o.v*dt;if(o.y<.3){o.y=rnd(12,24);o.m.position.x=rnd(-7.5,7.5);o.m.position.z=rnd(-4.5,6);}o.m.position.y=o.y;o.m.rotation.x+=o.rx*dt;o.m.rotation.z+=o.rz*dt;}else{o.m.position.y=-60;}});
-  blixt.style.opacity=(G&&!lugn&&puls>.75)?.22:0;
+  if(!(rk.laget===3&&rk.slog&&rk.t<1.32)){blixt.style.opacity=(G&&!lugn&&puls>.75)?.22:0;}
   /* kamera */
-  var S=skott[sk];tp.set(S.p[0],S.p[1],S.p[2]);tl.set(S.l[0],S.l[1],S.l[2]);
-  if(sk===NK-1&&rk.laget>=2){tl.y=Math.min(26,2.6+rk.y*.6);}
+  var S=skott[sk];
+  if(intro&&IN.kameror&&IN.kameror.length){var it=ljud.currentTime/(IN.till||15), ik=IN.kameror[Math.min(IN.kameror.length-1,Math.floor(it*IN.kameror.length))];S={p:ik.p,l:ik.l,upp:ik.upp};}
+  tp.set(S.p[0],S.p[1],S.p[2]);tl.set(S.l[0],S.l[1],S.l[2]);
+  if(sk===K_RAKET&&rk.laget===2){tl.y=Math.min(26,2.6+rk.y*.6);}
   tp.sub(tl).multiplyScalar(S.vid?avstV:avst).add(tl);if(sta&&S.upp){tl.y+=S.upp;}
-  if(manKam>0){tl.copy(mane.position);tp.set(mane.position.x*.45,10,mane.position.z*.45);}
+  if(manKam>0){tl.copy(mane.position);if(sta){tl.y+=2.6;}tp.set(mane.position.x*.45,10,mane.position.z*.45);}
   var kk=1-Math.pow(manKam>0?.0005:.02,dt);cp.lerp(tp,kk);cl.lerp(tl,kk);var sv=lugn?0:1;
   cam.position.set(cp.x+Math.sin(nu*.5)*.35*sv+(G||rk.laget===2?rnd(-.12,.12):0),cp.y+Math.sin(nu*.37)*.2*sv+puls*.06*sv+(G?rnd(-.12,.12):0),cp.z);
   cam.lookAt(cl);renderer.render(scene,cam);
