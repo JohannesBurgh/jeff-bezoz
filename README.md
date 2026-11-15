@@ -2,17 +2,18 @@
 
 Institutionen för tillämpad bezozologi. En professor, ett namn, en kartong i rymden.
 
-Det här är både sajten och byggsatsen. Ladda ner allt som zip via den gröna knappen **Code**, packa upp och öppna `index.html`.
+Sajten: https://johannesburgh.github.io/jeff-bezoz/
 
 ## Gör din egen flipp
 
-Kärnan är ljudet. I `material/flippen/` ligger flippen som ljudfil, hela (17,7 sekunder) och uppdelad i tre delar.
+Kärnan är ljudet. Ta flippen och låten och gör en egen musikvideo. Vem som flippar bestämmer du: din chef, din katt, din bostadsrättsförening.
 
-Du får använda ljudet för att göra egna flippar. Vem som flippar bestämmer du: din chef, din katt, din bostadsrättsförening.
+- `material/flippen/` Flippen som ljudfil, hela (17,7 sekunder) och uppdelad i tre delar
+- `lat/` Låten
 
-## Bygg vidare på institutionen
+## Sajten
 
-Läs `LAS_MIG.md`. Kortversionen: hela världen står som text i `varld.js`. Byt en gubbe, byt låten eller starta en egen arbetsplats.
+Koden till sajten ligger öppet här. Hela världen står som text i `varld.js`, och `LAS_MIG.md` beskriver hur den hänger ihop.
 
 ## Husregler
 

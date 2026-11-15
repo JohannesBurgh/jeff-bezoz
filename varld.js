@@ -12,6 +12,15 @@ window.BEZOZ_VARLD = {
   tavlan: { stort: 'JEFF BEZOZ', smatt: 'Jeff Bezoz' },   // texten på svarta tavlan
   skyltar: { hoger: ['ÖMTÅLIGT'], vanster: ['DENNA', 'SIDA UPP'], raket: ['TILL', 'MÅNEN'] },
 
+  /* ---------- MUSIKVIDEON ----------  youtube: videons id (det som står efter youtu.be/). stampel: liten lapp på rutan, '' tar bort den */
+  video: { youtube: '9bng8dEnUOk', stampel: 'ARBETSKOPIA' },
+
+  /* ---------- BONUSMATERIAL ----------  en rad per video: { youtube: 'id', rubrik: '...', text: '...' } */
+  bonus: [
+  ],
+
+  staty: { skylt: ['JEFF', 'BEZOZ'] },   // namnskylten på statyns sockel
+
   /* ---------- LÅTEN ----------
      fil:  ljudfilen. bpm: tempot.
      slag: tidpunkten (sekunder) för varje taktslag. Saknas listan räknar motorn själv från bpm och start. */
@@ -92,18 +101,21 @@ window.BEZOZ_VARLD = {
     { namn: 'FLOSSLINJEN',  p: [-6.4, 2.2, 6.6], l: [0.5, 1.4, 2.8],    upp: 1 },
     { namn: 'OVERHEAD',     p: [0, 17, 2.2],     l: [0, 0, 0.6],        vid: true },
     { namn: 'TVÄTTBJÖRNEN', p: [-5.2, 2.5, 0.2], l: [-6.6, 1.2, -2.6],  upp: 0.3 },
-    { namn: 'RAKETEN',      p: [1.6, 3.4, 1.6],  l: [6.4, 2.4, -2.2],   upp: 1 }
+    { namn: 'STATYN',       p: [-3.3, 2.9, 0.3], l: [-6.5, 2.0, -4.05], upp: 0.9 },
+    { namn: 'RAKETEN',      p: [1.6, 3.4, 1.6],  l: [6.4, 2.4, -2.2],   upp: 1 }   // raketen ska stå sist
   ],
   takter_per_kamera: 8,
+  takter_helbild_vid_scroll: 32,   // så länge står kameran still i helbild efter att man scrollat
+  nedrakning: 5,             // raketen räknar ner från den här siffran, en siffra varannan takt
   flipp_takter: 16,          // hur länge FLIPPA håller i sig om ingen röstfil finns
 
   /* ---------- SLÄPPEN ---------- */
   paket: [
-    { nr: 'PAKET 01', rubrik: 'Låten', text: 'Tyrolerpolka i 143,6 slag per minut. Tryck LJUD här nere så dansar hela institutionen i takt.', stampel: 'LEVERERAD' },
-    { nr: 'PAKET 02', rubrik: 'Flippen', text: 'Sjutton sekunder ur ett tisdagsmöte som aldrig tog slut. Tryck FLIPPA. Tryck igen, det finns mer.', stampel: 'LEVERERAD' },
-    { nr: 'PAKET 03', rubrik: 'Tyrolerutgåvan', text: 'Samma institution, fast med hatt, hängslen och kor. Bergen växer upp ur golvet. Månen har redan sin hatt.', stampel: 'TRYCK TYROLEN' },
-    { nr: 'PAKET 04', rubrik: 'Videon', text: 'Mötet. Skriket. Kartongen som skickas fram och tillbaka på beatet. Kontorsstolsbaletten. Uppskjutningen.', stampel: 'PÅ VÄG' },
-    { nr: 'PAKET 05', rubrik: 'Byggsatsen', text: 'Hela institutionen som en mapp. Anställ egna kollegor eller starta en egen arbetsplats. Läs vidare längre ner.', stampel: 'ÖPPNAS HÄR NERE' }
+    { nr: 'PAKET 01', rubrik: 'Videon', text: 'Mötet. Skriket. Kartongen som skickas fram och tillbaka på beatet. Kontorsstolsbaletten. Uppskjutningen.', stampel: 'SE DEN HÄR OVANFÖR' },
+    { nr: 'PAKET 02', rubrik: 'Låten', text: 'Tyrolerpolka i 143,6 slag per minut. Tryck LJUD här nere så dansar hela institutionen i takt.', stampel: 'LEVERERAD' },
+    { nr: 'PAKET 03', rubrik: 'Flippen', text: 'Sjutton sekunder ur ett tisdagsmöte som aldrig tog slut. Tryck FLIPPA. Tryck igen, det finns mer.', stampel: 'LEVERERAD' },
+    { nr: 'PAKET 04', rubrik: 'Tyrolerutgåvan', text: 'Samma institution, fast med hatt, hängslen och kor. Bergen växer upp ur golvet. Månen har redan sin hatt.', stampel: 'TRYCK TYROLEN' },
+    { nr: 'PAKET 05', rubrik: 'Din egen flipp', text: 'Flippen och låten går att hämta längst ner. Gör en egen musikvideo. Vem som flippar bestämmer du.', stampel: 'HÄMTA LÄNGST NER' }
   ],
   byggsats_lank: 'https://github.com/JohannesBurgh/jeff-bezoz/archive/refs/heads/main.zip',         // adressen till zip-filen. Tom rad = ingen nedladdningsknapp
   finstilt: 'Ingen miljardär har medverkat, tillfrågats eller märkt något. Jeff Bezoz stavas med z med flit. Alla personer på institutionen är påhittade, inklusive tvättbjörnarna.'
