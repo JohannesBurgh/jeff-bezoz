@@ -319,6 +319,9 @@ function markera(n){kortKn.forEach(function(k,j){k.classList.toggle('vald',n===j
 /* ---------- låten och klockan ---------- */
 var ljud=new Audio(), spelar=false, vill=false, klock0=performance.now()/1000, bLjud=$('ljud');
 ljud.preload='none';ljud.src=V.lat.fil;
+var BORJA=V.lat.borja_vid||0, hoppat=false;
+function hoppaFram(){if(hoppat||!BORJA){return;}try{if(ljud.readyState>=1){ljud.currentTime=BORJA;hoppat=true;}}catch(e){}}
+ljud.addEventListener('loadedmetadata',hoppaFram);
 function slagVid(t){
   if(!SLAG||SLAG.length<2){return Math.max(0,(t-(V.lat.start||0))/SPB);}
   var n=SLAG.length;if(t<=SLAG[0]){return 0;}
@@ -329,11 +332,11 @@ function slagNu(){return spelar?Math.max(0,slagVid(ljud.currentTime)):(performan
 function stopp(){if(spelar){klock0=performance.now()/1000-slagNu()*SPB;}spelar=false;bLjud.classList.remove('pa');bLjud.textContent='♪ LJUD';}
 bLjud.onclick=function(){
   if(!vill){var p;try{p=ljud.play();}catch(e){return;}
-    vill=true;bLjud.classList.add('pa');bLjud.textContent='♪ PAUS';
+    hoppaFram();vill=true;bLjud.classList.add('pa');bLjud.textContent='♪ PAUS';
     if(p&&p.catch){p.catch(function(){vill=false;stopp();});}}
   else{vill=false;ljud.pause();stopp();}};
 ljud.addEventListener('playing',function(){if(vill){spelar=true;senSlag=-1;}});
-ljud.addEventListener('ended',function(){vill=false;stopp();ljud.currentTime=0;});
+ljud.addEventListener('ended',function(){vill=false;stopp();try{ljud.currentTime=BORJA;}catch(e){}});
 /* gabbersparkar ovanpå, när man flippar */
 var AC=window.AudioContext||window.webkitAudioContext, ac=null, dist=null;
 function ljudmotor(){try{if(!ac&&AC){ac=new AC();dist=ac.createWaveShaper();var c=new Float32Array(256);for(var n=0;n<256;n++){c[n]=Math.tanh((n/128-1)*6);}dist.curve=c;
@@ -463,6 +466,7 @@ function bild(){
       if(rk.y<=0){rk.y=0;rk.laget=0;rk.retur=false;raket.rotation.set(0,0,0);puls=1.6;raket.scale.set(1.3,.5,1.3);duns();folk.forEach(function(p){p.hopp=1.4;});}}}
   traff*=Math.pow(.08,dt);manKam=Math.max(0,manKam-dt);mm.scale.set(1.4-traff*.7,.5+traff*1.1,.5);
   if(rk.laget!==3||rk.retur){raket.position.y=rk.y;}raket.scale.lerp(ETT,.12);
+  if(rk.laget===0){raket.rotation.z=Math.sin(b*Math.PI)*.07;raket.position.y=Math.abs(Math.sin(b*Math.PI))*.18;if(Math.abs(raket.scale.x-1)<.02){raket.scale.y=1+puls*.07;}}
   if(rk.laget===1||rk.laget===2){for(var n=0;n<2;n++){var q=rok[(Math.random()*rok.length)|0];if(q.t>1.2){q.t=0;q.fri=false;q.m.position.set(6.4+rnd(-.3,.3),rk.y+.2,-2.2+rnd(-.3,.3));q.vx=rnd(-2.5,2.5);q.vz=rnd(-2.5,2.5);}}}
   rok.forEach(function(q){if(q.t<1.5){q.t+=dt;q.m.position.x+=q.vx*dt;q.m.position.z+=q.vz*dt;if(q.fri){q.vy-=dt*9;q.m.position.y+=q.vy*dt;}else{q.m.position.y=Math.max(.2,q.m.position.y-dt*3);}
     q.m.scale.setScalar(Math.max(.01,1.4-q.t)*1.6);q.m.rotation.x+=dt*4;}else{q.m.position.y=-50;}});
