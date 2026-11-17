@@ -15,7 +15,8 @@ window.BEZOZ_VARLD = {
   /* ---------- MUSIKVIDEON ----------  youtube: videons id (det som står efter youtu.be/). stampel: liten lapp på rutan, '' tar bort den */
   video: { youtube: '9bng8dEnUOk', stampel: 'ARBETSKOPIA' },
 
-  /* ---------- BONUSMATERIAL ----------  en rad per video: { youtube: 'id', rubrik: '...', text: '...' } */
+  /* ---------- FLER FLIPPAR ----------  en rad per klipp: { youtube: 'id', rubrik: '...', text: '...', fil: 'flippar/namn.mp4' }
+     fil är valfri: finns den får klippet en HÄMTA-knapp. Lägg filen i mappen flippar/ */
   bonus: [
   ],
 
@@ -27,7 +28,7 @@ window.BEZOZ_VARLD = {
   lat: {
     fil: 'lat/jeff_bezoz_gubbe.mp3',
     bpm: 143.6,
-    borja_vid: 16.1,         // LJUD startar låten här (sekunder), precis där basen slår in. 0 = från början
+    borja_vid: 16.1,         // MUSIK startar låten här (sekunder), precis där basen slår in. 0 = från början
     start: 0.09,
     slag: [0.09,0.46,0.88,1.25,1.65,2.04,2.46,2.88,3.27,3.71,4.13,4.55,4.97,5.39,5.8,6.25,6.64,7.06,7.48,7.92,8.34,8.82,9.27,9.68,10.08,10.49,10.89,11.29,11.7,12.1,12.49,12.86,13.28,13.7,14.12,14.56,14.98,15.35,15.77,16.18,16.6,17.02,17.44,17.86,18.27,18.69,19.11,19.53,19.95,20.36,20.78,21.2,21.62,22.04,22.45,22.87,23.29,23.71,24.13,24.54,24.96,25.38,25.8,26.21,26.63,27.05,27.47,27.89,28.3,28.72,29.14,29.54,29.95,30.37,30.79,31.21,31.65,32.14,32.62,33.09,33.51,33.92,34.34,34.76,35.18,35.6,36.01,36.43,36.85,37.27,37.69,38.1,38.52,38.94,39.36,39.78,40.19,40.61,41.03,41.45,41.87,42.28,42.7,43.12,43.54,43.95,44.37,44.79,45.21,45.63,46.02,46.39,46.79,47.16,47.55,47.93,48.34,48.76,49.18,49.58,49.99,50.41,50.83,51.25,51.66,52.06,52.5,52.92,53.34,53.75,54.17,54.59,55.01,55.43,55.84,56.26,56.68,57.08,57.49,57.91,58.33,58.68,59.05,59.42,59.79,60.21,60.63,61.05,61.46,61.88,62.3,62.72,63.11,63.55,63.95,64.37,64.78,65.2,65.62,66.04,66.46,66.87,67.29,67.71,68.13,68.55,68.96,69.38,69.78,70.19,70.61,71.03,71.45,71.87,72.28,72.7,73.12,73.54,73.96,74.37,74.79,75.21,75.6,76.02,76.44,76.86,77.28,77.69,78.11,78.53,78.95,79.39,79.83,80.3,80.76,81.22,81.64,82.06,82.48,82.89,83.31,83.73,84.15,84.57,84.98,85.4,85.82,86.24,86.63,87.05,87.47,87.89,88.31,88.72,89.14,89.56,89.98,90.37,90.79,91.21,91.63,92.04,92.46,92.88,93.3,93.72,94.13,94.53,94.95,95.36,95.78,96.2,96.62,97.01,97.43,97.85,98.29,98.71,99.13,99.52,99.92,100.4,100.84,101.26,101.68,102.1,102.52,102.96,103.4,103.82,104.23,104.65,105.07,105.49,105.91,106.32,106.74,107.16,107.58,108.0,108.44,108.9,109.37,109.83,110.27,110.69,111.08,111.53,111.94,112.36,112.78,113.2,113.61,114.03,114.43,114.85,115.26,115.68,116.1,116.5,116.91,117.33,117.75,118.17,118.58,119.0,119.42,119.81,120.23,120.65,121.07,121.49,121.91,122.3]
   },
@@ -99,7 +100,7 @@ window.BEZOZ_VARLD = {
   kameror: [
     { namn: 'HELBILD',      p: [0, 7.5, 17.5],   l: [0, 2.4, 0],        vid: true, upp: 5 },
     { namn: 'PROFESSORN',   p: [0.6, 3.7, 4.9],  l: [0, 2.7, 0],        upp: 0.6 },
-    { namn: 'RAKETEN',      p: [1.6, 3.4, 1.6],  l: [6.4, 2.4, -2.2],   upp: 1 },
+    { namn: 'RAKETEN',      p: [0.9, 3.0, 2.9],  l: [6.4, 2.6, -2.2],   upp: 1.3 },
     { namn: 'FLOSSLINJEN',  p: [-6.4, 2.2, 6.6], l: [0.5, 1.4, 2.8],    upp: 1 },
     { namn: 'STATYN',       p: [1.5, 3.1, 3.7],  l: [-2.2, 2.4, -1.6],  upp: 0.6 },   // statyn bakom professorn
     { namn: 'OVANIFRÅN',    p: [0, 13.5, 10.5],  l: [0, 0.6, 0.2],      vid: true, upp: 2 },
@@ -118,11 +119,11 @@ window.BEZOZ_VARLD = {
 
   /* ---------- SLÄPPEN ---------- */
   paket: [
-    { nr: 'PAKET 01', rubrik: 'Videon', text: 'Mötet. Skriket. Kartongen som skickas fram och tillbaka på beatet. Kontorsstolsbaletten. Uppskjutningen.', stampel: 'SE DEN HÄR OVANFÖR' },
-    { nr: 'PAKET 02', rubrik: 'Låten', text: 'Tyrolerpolka i 143,6 slag per minut. Tryck LJUD här nere så dansar hela institutionen i takt.', stampel: 'LEVERERAD' },
+    { nr: 'PAKET 01', rubrik: 'Videon', text: 'Mötet. Skriket. Kartongen som skickas fram och tillbaka på beatet. Kontorsstolsbaletten. Uppskjutningen.', stampel: 'LÄNGST UPP' },
+    { nr: 'PAKET 02', rubrik: 'Låten', text: 'Tyrolerpolka i 143,6 slag per minut. Tryck MUSIK här nere så dansar hela institutionen i takt.', stampel: 'LEVERERAD' },
     { nr: 'PAKET 03', rubrik: 'Flippen', text: 'Sjutton sekunder ur ett tisdagsmöte som aldrig tog slut. Tryck FLIPPA. Tryck igen, det finns mer.', stampel: 'LEVERERAD' },
     { nr: 'PAKET 04', rubrik: 'Tyrolerutgåvan', text: 'Samma institution, fast med hatt, hängslen och kor. Bergen växer upp ur golvet. Månen har redan sin hatt.', stampel: 'TRYCK TYROLEN' },
-    { nr: 'PAKET 05', rubrik: 'Din egen flipp', text: 'Flippen och låten går att hämta längst ner. Gör en egen musikvideo. Vem som flippar bestämmer du.', stampel: 'HÄMTA LÄNGST NER' }
+    { nr: 'PAKET 05', rubrik: 'Din egen flipp', text: 'Flippen och låten går att hämta här ovanför. Gör en egen musikvideo. Vem som flippar bestämmer du.', stampel: 'HÄMTA OVANFÖR' }
   ],
   byggsats_lank: 'https://github.com/JohannesBurgh/jeff-bezoz/archive/refs/heads/main.zip',         // adressen till zip-filen. Tom rad = ingen nedladdningsknapp
   finstilt: 'Ingen miljardär har medverkat, tillfrågats eller märkt något. Jeff Bezoz stavas med z med flit. Alla personer på institutionen är påhittade, inklusive tvättbjörnen.'
