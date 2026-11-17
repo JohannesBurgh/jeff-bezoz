@@ -6,7 +6,8 @@
 window.BEZOZ_VARLD = {
 
   titel: ['JEFF', 'BEZOZ'],          // sista bokstaven vickar
-  avsandare: 'Institutionen för tillämpad bezozologi, rum 24',
+  avsandare: 'Institutionen för tillämpad bezozologi, rum 24. Expedieras av Absurdimo',
+  kontakt: 'absurdimo@gmail.com',   // hit skickar folk sina egna flippar
   mottagare: 'Hela internet. Ömtåligt. Denna sida upp.',
   underrad: 'Musikvideon om en professor som sa ett namn en gång för mycket på ett möte. Levereras inom 1 till 3 flippar.',
   tavlan: { stort: 'JEFF BEZOZ', smatt: 'Jeff Bezoz' },   // texten på svarta tavlan
@@ -63,7 +64,7 @@ window.BEZOZ_VARLD = {
         byxa: '#23252c', skor: '#15110e', har: { typ: 'krans', farg: '#e9e6e0' }, skagg: '#e4e1da',
         glas: 'tjocka', glasfarg: '#2a1a14', extra: [] } },
 
-    { namn: 'Kostymmannen', befattning: 'OKLAR BEFATTNING',
+    { namn: 'Kostymmannen', befattning: 'OKLAR BEFATTNING', bild: 'portratt/kostymmannen.jpg',
       bio: 'Står stel i åtta takter. Sedan kommer kartongen och då är han med. Ingen vågar fråga om bulan.',
       stampel: 'STEL TILLS VIDARE',
       dans: 'stel-sen-floss', plats: [-4.2, 2.7],
@@ -116,7 +117,8 @@ window.BEZOZ_VARLD = {
   takter_helbild_vid_scroll: 32,   // så länge står kameran still i helbild efter att man scrollat
   nedrakning: 5,
   musik_vid_nedrakning: 0.65,      // låten glider ner till den här volymen under nedräkningen (1 = ingen sänkning)
-  kartonger_per_tryck: 2,             // raketen räknar ner från den här siffran, en siffra varannan takt
+  kartonger_per_tryck: 2,
+  chans_stort_drop: 0.15,          // chansen att ett tryck ger ett stort drop (5 till 10 kartonger). Första trycket ger alltid ett             // raketen räknar ner från den här siffran, en siffra varannan takt
   flipp_takter: 16,          // hur länge FLIPPA håller i sig om ingen röstfil finns
 
   /* ---------- SLÄPPEN ---------- */
@@ -128,5 +130,5 @@ window.BEZOZ_VARLD = {
     { nr: 'PAKET 05', rubrik: 'Din egen flipp', text: 'Flippen och låten går att hämta här ovanför. Gör en egen musikvideo. Vem som flippar bestämmer du.', stampel: 'HÄMTA OVANFÖR' }
   ],
   byggsats_lank: 'https://github.com/JohannesBurgh/jeff-bezoz/archive/refs/heads/main.zip',         // adressen till zip-filen. Tom rad = ingen nedladdningsknapp
-  finstilt: 'Ingen miljardär har medverkat, tillfrågats eller märkt något. Jeff Bezoz stavas med z med flit. Alla personer på institutionen är påhittade, inklusive tvättbjörnen.'
+  finstilt: 'Ingen miljardär har medverkat, tillfrågats eller märkt något. Jeff Bezoz stavas med z med flit. Alla personer på institutionen är påhittade, inklusive tvättbjörnen. En produktion av Absurdimo, absurdimo@gmail.com.'
 };

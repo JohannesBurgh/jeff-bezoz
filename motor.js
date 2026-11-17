@@ -34,6 +34,7 @@ function $(id){return document.getElementById(id);}
   var vd=V.video||{}, vr=$('videoruta');
   if(vr&&vd.youtube){vr.appendChild(tv(vd.youtube,vd.stampel));var yl=$('ytlank');if(yl){yl.href='https://youtu.be/'+vd.youtube;}}
   else if($('video')){$('video').style.display='none';var sp=$('spela');if(sp){sp.style.display='none';}}
+  var ka=$('kontakt');if(ka&&V.kontakt){ka.href='mailto:'+V.kontakt;ka.textContent=V.kontakt;}else if(ka){ka.parentNode.style.display='none';}
   var bo=$('bonusrutor');
   if(bo){(V.bonus||[]).forEach(function(x){var k=document.createElement('div');k.className='bk';k.appendChild(tv(x.youtube,''));
       var t=document.createElement('h3');t.textContent=x.rubrik||'';k.appendChild(t);if(x.text){var q=document.createElement('p');q.textContent=x.text;k.appendChild(q);}
@@ -405,7 +406,11 @@ function slappLada(){var st=rnd(.34,.78), m=box(st,st*rnd(.7,1),st,mKartong,rnd(
   box(st*1.03,st*.12,st*.3,mTejp,0,st*.3,0,m).castShadow=false;
   lador.push({m:m,s:st,vx:rnd(-2,2),vy:rnd(-3,0),vz:rnd(-2,2),wx:rnd(-5,5),wz:rnd(-5,5),bort:0});}
 function rensaLador(){lador.forEach(function(l){l.bort=1;l.vy=rnd(9,16);});tryck=0;}
-$('kartong').onclick=function(){ljudmotor();kartongljud();tryck++;for(var q=0;q<(V.kartonger_per_tryck||2);q++){slappLada();}
+$('kartong').onclick=function(){ljudmotor();tryck++;
+  /* första trycket och ibland när man minst anar det: ett stort drop */
+  var stort=tryck===1||(tryck>3&&Math.random()<(V.chans_stort_drop||.15)), antal=stort?5+Math.floor(Math.random()*6):(V.kartonger_per_tryck||2);
+  kartongljud();if(stort){setTimeout(kartongljud,90);setTimeout(kartongljud,200);duns();stor('LEVERANS');}
+  for(var q=0;q<antal;q++){slappLada();}
   var liv=lador.filter(function(l){return !l.bort;});while(liv.length>110){liv.shift().bort=1;}
   if(tryck===1){valj(0,16);markera(-1);}};
 /* stolbaletten */
@@ -475,7 +480,7 @@ function bild(){
   /* raket: nedräkning på takten, iväg, träff i månen, retur */
   if(rk.laget===1){var nr=hel-rk.start, steg=Math.floor(nr/2), NED=V.nedrakning||5;raket.position.x=6.4+Math.sin(nu*60)*(.015+Math.max(0,steg)*.022);
     if(nr>=0&&steg!==rk.sist){rk.sist=steg;
-      if(steg<NED){stor(String(NED-steg));gas(steg);rk.gas=1;eld.visible=true;}
+      if(steg<NED){stor(String(NED-steg));if(ac){pip(steg===NED-1?660:440,ac.currentTime+.01,.16,.22,'square');}gas(steg);rk.gas=1;eld.visible=true;}
       else{stor('IVÄG');rk.laget=2;rk.v=4;volym();muller(2.6);if(ac){pip(880,ac.currentTime+.01,.5,.2,'square');}folk.forEach(function(p){p.hopp=1.2;});}}
     rk.gas=(rk.gas||0)*Math.pow(.05,dt);eld.scale.y=.2+Math.random()*.2+Math.max(0,steg)*.12+rk.gas*(.9+steg*.15);}
   else if(rk.laget===2){rk.v+=dt*30;rk.y+=rk.v*dt;eld.scale.y=1.2+Math.random();raket.rotation.y+=dt*4;
