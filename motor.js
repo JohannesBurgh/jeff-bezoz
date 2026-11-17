@@ -256,13 +256,52 @@ var bjornar=[bjorn(4.3,-3.4,-.3,2)];
 
 /* ---------- kartongraketen ---------- */
 var raket=new T.Group();raket.position.set(6.4,0,-2.2);rum.add(raket);
-box(1.1,2.4,1.1,mKartong,0,1.6,0,raket);
-var nos=new T.Mesh(new T.ConeGeometry(.8,1.1,4),mKartong);nos.position.y=3.35;nos.rotation.y=Math.PI/4;nos.castShadow=true;raket.add(nos);
-box(1.12,.16,1.12,mTejp,0,2.3,0,raket);box(1.12,.16,1.12,mTejp,0,.9,0,raket);
-[[.7,0,0],[-.7,0,0],[0,.7,1],[0,-.7,1]].forEach(function(f){box(f[2]?.08:.5,.8,f[2]?.5:.08,M(0xe8621c),f[0],.6,f[1],raket);});
-skylt(V.skyltar.raket,1,.5,0,1.6,.56,0,'#f6ead2','#3b2616',raket);
-var eld=new T.Mesh(new T.ConeGeometry(.45,1.6,7),new T.MeshBasicMaterial({color:0xffb020}));eld.rotation.x=Math.PI;eld.position.y=-.5;eld.visible=false;raket.add(eld);
-var rok=[];for(i=0;i<18;i++){var r=box(.3,.3,.3,M(0xf6ead2),0,-50,0,rum);r.castShadow=false;rok.push({m:r,t:9});}
+/* Kartongraketen Mk II: tre flyttkartonger på varandra, en lånad trafikkon som nos och en hink som motor */
+var tStreck=tex(128,64,function(g,w,h){g.fillStyle='#f6ead2';g.fillRect(0,0,w,h);g.fillStyle='#16100c';
+  for(var x=8;x<w-8;x+=2+((x*7)%5)){g.fillRect(x,6,(x%3)+1,38);}g.font='700 12px monospace';g.fillText('BZZ-0001-MÅN',10,58);});
+var rkLadan=[];
+function rkLada(w,h,y,ry){var m=box(w,h,w,mKartong,0,y,0,raket);m.rotation.y=ry;
+  box(.2,h+.02,w+.02,mTejp,0,0,0,m).castShadow=false;box(w+.02,.14,w+.02,mTejp,0,h/2-.07,0,m).castShadow=false;rkLadan.push(m);return m;}
+var l1=rkLada(1.3,1.3,1.1,0), l2=rkLada(1.12,1.15,2.325,.12), l3=rkLada(.94,.95,3.375,-.1);
+/* skyltar och fraktsedel */
+skylt(V.skyltar.raket,.9,.45,.38,.05,.66,0,'#f6ead2','#3b2616',l1);
+skylt(['ÖMTÅLIGT'],.8,.3,-.66,.35,0,-Math.PI/2,'#e8621c','#f6ead2',l1);
+var fs=new T.Mesh(new T.PlaneGeometry(.44,.22),new T.MeshLambertMaterial({map:tStreck}));fs.position.set(-.2,-.2,.48);fs.rotation.z=.06;l3.add(fs);
+/* fönster */
+var mGlas=M(0x9fd6e8,{emissive:0x3a7a92,emissiveIntensity:.5}), mRam=M(0x3b2616);
+function fonster(x,y,z,ry,p){var g=new T.Group();g.position.set(x,y,z);g.rotation.y=ry;p.add(g);
+  var r=new T.Mesh(new T.CylinderGeometry(.2,.2,.04,16),mRam);r.rotation.x=Math.PI/2;g.add(r);
+  var gl=new T.Mesh(new T.CylinderGeometry(.155,.155,.05,16),mGlas);gl.rotation.x=Math.PI/2;gl.position.z=.005;g.add(gl);
+  var bl=box(.07,.05,.01,M(0xffffff),.05,.06,.035,g);bl.castShadow=false;return g;}
+fonster(-.28,.12,.57,0,l2);fonster(.57,.12,.1,Math.PI/2,l2);
+/* nosen: en lånad trafikkon */
+var nosG=new T.Group();nosG.position.y=3.85;raket.add(nosG);
+box(.98,.07,.98,M(0xb5481a),0,.035,0,nosG);
+var kon=new T.Mesh(new T.ConeGeometry(.42,1.05,18),M(0xe8621c));kon.position.y=.58;kon.castShadow=true;nosG.add(kon);
+cyl(.245,.285,.15,M(0xf6ead2),0,.5,0,nosG,18);cyl(.13,.17,.1,M(0xf6ead2),0,.82,0,nosG,18);
+var lampa2=sph(.08,M(0xff2a1a,{emissive:0xff2a1a,emissiveIntensity:.2}),0,1.12,0,nosG);
+/* fenor av utplattade kartongflikar */
+[[0,.78],[Math.PI/2,.78],[Math.PI,.78],[-Math.PI/2,.78]].forEach(function(f){var g=new T.Group();g.rotation.y=f[0]+Math.PI/4;raket.add(g);
+  var fe=box(.06,1.15,.62,mKartong,0,.72,f[1],g);fe.rotation.x=-.18;box(.065,.16,.63,M(0xe8621c),0,.98,f[1]+.05,g).rotation.x=-.18;});
+/* motorn: en hink */
+var hink=new T.Mesh(new T.CylinderGeometry(.3,.44,.48,16,1,true),new T.MeshLambertMaterial({color:0x8c9096,side:T.DoubleSide}));hink.position.y=.22;hink.castShadow=true;raket.add(hink);
+cyl(.31,.31,.05,M(0x5c6066),0,.45,0,raket,16);var bygel=new T.Mesh(new T.TorusGeometry(.33,.015,5,16,Math.PI),M(0x5c6066));bygel.position.set(0,.25,0);bygel.rotation.z=Math.PI;raket.add(bygel);
+/* lågan: inre och yttre kon */
+var eld=new T.Group();eld.visible=false;raket.add(eld);
+var eldUt=new T.Mesh(new T.ConeGeometry(.48,2.2,12),new T.MeshBasicMaterial({color:0xff7a1a,transparent:true,opacity:.85}));eldUt.rotation.x=Math.PI;eldUt.position.y=-1.1;eld.add(eldUt);
+var eldIn=new T.Mesh(new T.ConeGeometry(.26,1.3,10),new T.MeshBasicMaterial({color:0xfff2b0}));eldIn.rotation.x=Math.PI;eldIn.position.y=-.65;eld.add(eldIn);
+var eldljus=new T.PointLight(0xff8a2a,0,9);eldljus.position.set(6.4,.4,-2.2);rum.add(eldljus);
+/* startställningen: kartongrör och ståltråd */
+var torn=new T.Group();torn.position.set(6.4,0,-3.78);rum.add(torn);var mRor=M(0xb58a55), mTrad=M(0x6b6f66);
+[[-.42,-.38],[.42,-.38],[-.42,.38],[.42,.38]].forEach(function(q){cyl(.06,.06,4.5,mRor,q[0],2.25,q[1],torn,8);});
+for(var tv=.6;tv<4.4;tv+=.95){box(.9,.04,.04,mTrad,0,tv,.38,torn);box(.9,.04,.04,mTrad,0,tv,-.38,torn);box(.04,.04,.8,mTrad,.42,tv,0,torn);box(.04,.04,.8,mTrad,-.42,tv,0,torn);
+  var kr=box(.04,1.25,.04,mTrad,0,tv+.47,.38,torn);kr.rotation.z=.75;}
+box(.95,.06,.85,mKartong,0,1.55,0,torn);box(.95,.06,.85,mKartong,0,3.25,0,torn);
+var tornLampa=sph(.07,M(0xff2a1a,{emissive:0xff2a1a,emissiveIntensity:.3}),0,4.56,0,torn);
+var arm=new T.Group();arm.position.set(.25,2.95,.38);torn.add(arm);
+box(.12,.12,.78,mTrad,0,0,.39,arm);var slang=cyl(.035,.035,.9,M(0x2a2420),0,-.42,.75,arm,6);slang.rotation.x=.25;
+box(.2,.2,.08,M(0xe2b13c),0,0,.8,arm);var armVinkel=0;
+var rok=[];for(i=0;i<36;i++){var r=box(.42,.42,.42,M(0xf6ead2),0,-50,0,rum);r.castShadow=false;rok.push({m:r,t:9});}
 var rk={laget:0,t:0,v:0,y:0,start:0,sist:-1}, ETT=new T.Vector3(1,1,1), UPP=new T.Vector3(0,1,0), RIKT=new T.Vector3(), KNUFF=new T.Vector3(), traff=0, manKam=0, manPaket=[];
 
 /* ---------- rymden och alperna ---------- */
@@ -467,7 +506,13 @@ function bild(){
   traff*=Math.pow(.08,dt);manKam=Math.max(0,manKam-dt);mm.scale.set(1.4-traff*.7,.5+traff*1.1,.5);
   if(rk.laget!==3||rk.retur){raket.position.y=rk.y;}raket.scale.lerp(ETT,.12);
   if(rk.laget===0){raket.rotation.z=Math.sin(b*Math.PI)*.07;raket.position.y=Math.abs(Math.sin(b*Math.PI))*.18;if(Math.abs(raket.scale.x-1)<.02){raket.scale.y=1+puls*.07;}}
-  if(rk.laget===1||rk.laget===2){for(var n=0;n<2;n++){var q=rok[(Math.random()*rok.length)|0];if(q.t>1.2){q.t=0;q.fri=false;q.m.position.set(6.4+rnd(-.3,.3),rk.y+.2,-2.2+rnd(-.3,.3));q.vx=rnd(-2.5,2.5);q.vz=rnd(-2.5,2.5);}}}
+  /* startställning, låga och ljus */
+  var nrA=rk.laget===1?Math.floor((hel-rk.start)/2):0, armMal=(rk.laget===0||(rk.laget===1&&nrA<(V.nedrakning||5)-2))?0:-1.7;
+  armVinkel+=(armMal-armVinkel)*Math.min(1,dt*3);arm.rotation.y=armVinkel;
+  var blink=(rk.laget===1&&Math.floor(nu*4)%2)?1.6:.2;lampa2.material.emissiveIntensity=blink;tornLampa.material.emissiveIntensity=rk.laget?blink:.15+puls*.3;
+  if(eld.visible){eldUt.scale.set(.85+Math.random()*.3,1,.85+Math.random()*.3);eldIn.scale.set(.8+Math.random()*.4,.8+Math.random()*.4,.8+Math.random()*.4);}
+  eldljus.intensity=(eld.visible&&rk.y<8)?(1.6+Math.random()*1.4)*Math.max(0,1-rk.y/8):0;
+  if(rk.laget===1||rk.laget===2){for(var n=0;n<3;n++){var q=rok[(Math.random()*rok.length)|0];if(q.t>1.2){q.t=0;q.fri=false;q.m.position.set(6.4+rnd(-.3,.3),rk.y+.2,-2.2+rnd(-.3,.3));q.vx=rnd(-3.5,3.5)*(rk.y<1?1.4:.6);q.vz=rnd(-3.5,3.5)*(rk.y<1?1.4:.6);}}}
   rok.forEach(function(q){if(q.t<1.5){q.t+=dt;q.m.position.x+=q.vx*dt;q.m.position.z+=q.vz*dt;if(q.fri){q.vy-=dt*9;q.m.position.y+=q.vy*dt;}else{q.m.position.y=Math.max(.2,q.m.position.y-dt*3);}
     q.m.scale.setScalar(Math.max(.01,1.4-q.t)*1.6);q.m.rotation.x+=dt*4;}else{q.m.position.y=-50;}});
   /* rymd / tyrol */
