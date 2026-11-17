@@ -114,7 +114,9 @@ window.BEZOZ_VARLD = {
   ] },
   takter_per_kamera: 8,
   takter_helbild_vid_scroll: 32,   // så länge står kameran still i helbild efter att man scrollat
-  nedrakning: 5,             // raketen räknar ner från den här siffran, en siffra varannan takt
+  nedrakning: 5,
+  musik_vid_nedrakning: 0.65,      // låten glider ner till den här volymen under nedräkningen (1 = ingen sänkning)
+  kartonger_per_tryck: 2,             // raketen räknar ner från den här siffran, en siffra varannan takt
   flipp_takter: 16,          // hur länge FLIPPA håller i sig om ingen röstfil finns
 
   /* ---------- SLÄPPEN ---------- */
