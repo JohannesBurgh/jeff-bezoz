@@ -56,3 +56,7 @@ Det här ligger i `motor.js` och är inte flyttat till `varld.js` ännu:
 ## Inte bestämt än
 
 Licensen. Innan mappen släpps till andra behöver det stå här vad man får göra med låten, karaktärerna och koden.
+
+## När du ändrat i filerna
+
+Webbläsare sparar gamla versioner av `varld.js` och `motor.js` en stund. Ändra siffran efter `?v=` i `index.html` (till exempel dagens datum) när du lagt upp en ny version, så hämtar alla den nya direkt.
