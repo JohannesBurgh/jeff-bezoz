@@ -125,7 +125,7 @@ pre{margin-top:14px;background:#0d0906;color:#f3dfb4;border-left:8px solid var(-
 #knappar button{max-width:none;padding:11px 6px 9px;font-size:12.5px}
 section{padding-bottom:190px}
 @media (min-width:760px){#knappar{grid-template-columns:repeat(6,150px);justify-content:center}section{padding-bottom:150px}}
-#stor{position:fixed;inset:0;z-index:4;display:grid;place-items:center;pointer-events:none;opacity:0;text-align:center;
+#stor{position:fixed;inset:0;z-index:4;will-change:transform,opacity;display:grid;place-items:center;pointer-events:none;opacity:0;text-align:center;
   font-family:"Bowlby One",sans-serif;font-size:clamp(64px,24vw,230px);line-height:.9;color:var(--gradde);
   text-shadow:0 .05em 0 var(--orange),0 .1em 0 var(--brun),0 .2em .4em rgba(0,0,0,.6)}
 #stor.pang{animation:pang .75s cubic-bezier(.2,1.4,.4,1) both}

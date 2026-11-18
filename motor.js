@@ -10,7 +10,7 @@ var T=THREE, BPM=V.lat.bpm||120, SPB=60/BPM, SLAG=V.lat.slag||null;
 var lugn=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
 var canvas=document.getElementById('scen'), renderer;
 try{renderer=new T.WebGLRenderer({canvas:canvas,antialias:true});}catch(e){fel.style.display='block';return;}
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+var DPR=Math.min(devicePixelRatio||1,2);renderer.setPixelRatio(DPR);
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
 var scene=new T.Scene(), RYMD=new T.Color(0x130d0a), ALP=new T.Color(0x8fd0ff);
 scene.background=RYMD.clone();scene.fog=new T.Fog(0x130d0a,40,110);
@@ -402,16 +402,19 @@ $('flippa').onclick=function(){
 $('raket').onclick=function(){if(rk.laget===0){ljudmotor();rensaLador();rk.laget=1;rk.start=Math.floor(slagNu())+1;rk.sist=-1;volym();valj(K_RAKET,34);markera(-1);}};
 /* kartongregn: varje tryck släpper ner fler kartonger som studsar runt i takt. Nollställs när man byter läge */
 var linje=folk.filter(function(p){return p.d.dans!=='flipp';}).sort(function(a,b){return a.d.plats[0]-b.d.plats[0];}), lador=[], tryck=0;
-function slappLada(){var st=rnd(.34,.78), m=box(st,st*rnd(.7,1),st,mKartong,rnd(-6.6,6.6),rnd(9,15),rnd(-3.8,4.3),rum);m.castShadow=false;
-  box(st*1.03,st*.12,st*.3,mTejp,0,st*.3,0,m).castShadow=false;
-  lador.push({m:m,s:st,vx:rnd(-2,2),vy:rnd(-3,0),vz:rnd(-2,2),wx:rnd(-5,5),wz:rnd(-5,5),bort:0});}
+/* alla kartonger ritas som två instanser (kartong + tejp): ett tryck skapar inget nytt, så man kan peppra på */
+var LMAX=V.max_kartonger||220, ladGeo=new T.BoxGeometry(1,1,1);
+var ladIM=new T.InstancedMesh(ladGeo,mKartong,LMAX), tejpIM=new T.InstancedMesh(ladGeo,mTejp,LMAX);
+[ladIM,tejpIM].forEach(function(im){im.count=0;im.frustumCulled=false;im.receiveShadow=true;im.castShadow=false;im.instanceMatrix.setUsage(T.DynamicDrawUsage);rum.add(im);});
+var LD=new T.Object3D(), LM=new T.Matrix4(), TEJP=new T.Matrix4().compose(new T.Vector3(0,.46,0),new T.Quaternion(),new T.Vector3(1.03,.1,.32));
+function slappLada(){if(lador.length>=LMAX){lador.shift();}var st=rnd(.34,.78);
+  lador.push({p:new T.Vector3(rnd(-6.6,6.6),rnd(9,15),rnd(-3.8,4.3)),r:new T.Euler(rnd(0,3),rnd(0,3),rnd(0,3)),s:st,h:st*rnd(.7,1),vx:rnd(-2,2),vy:rnd(-3,0),vz:rnd(-2,2),wx:rnd(-5,5),wz:rnd(-5,5),bort:0});}
 function rensaLador(){lador.forEach(function(l){l.bort=1;l.vy=rnd(9,16);});tryck=0;}
 $('kartong').onclick=function(){ljudmotor();tryck++;
   /* första trycket och ibland när man minst anar det: ett stort drop */
   var stort=tryck===1||(tryck>3&&Math.random()<(V.chans_stort_drop||.15)), antal=stort?5+Math.floor(Math.random()*6):(V.kartonger_per_tryck||2);
   kartongljud();if(stort){setTimeout(kartongljud,90);setTimeout(kartongljud,200);duns();stor('LEVERANS');}
   for(var q=0;q<antal;q++){slappLada();}
-  var liv=lador.filter(function(l){return !l.bort;});while(liv.length>110){liv.shift().bort=1;}
   if(tryck===1){valj(0,16);markera(-1);}};
 /* stolbaletten */
 var balett=false, balK=0, bBa=$('balett'), hemStol=stolar.map(function(st){return [st.position.x,st.position.z,st.rotation.y];});
@@ -432,10 +435,12 @@ function storlek(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);ca
 addEventListener('resize',storlek);storlek();
 
 /* ---------- bildrutan ---------- */
-var varIntro=false, blixt=$('blixt'), takt=$('takt'), forra=performance.now()/1000, senSlag=-1, puls=0, TPK=V.takter_per_kamera||8;
+var fpsSum=0, fpsN=0, varIntro=false, blixt=$('blixt'), takt=$('takt'), forra=performance.now()/1000, senSlag=-1, puls=0, TPK=V.takter_per_kamera||8;
 function bild(){
   requestAnimationFrame(bild);
-  var nu=performance.now()/1000, dt=Math.min(.05,nu-forra);forra=nu;
+  var nu=performance.now()/1000, rdt=nu-forra, dt=Math.min(.05,rdt);forra=nu;
+  if(!document.hidden&&rdt<.5){fpsSum+=rdt;fpsN++;if(fpsN>=90){var snitt=fpsSum/fpsN;fpsSum=fpsN=0;
+    if(snitt>.024&&DPR>1){DPR=Math.max(1,DPR-.25);renderer.setPixelRatio(DPR);storlek();}}}
   var b=slagNu(), hel=Math.floor(b), nytt=false, IN=V.intro||{}, intro=spelar&&ljud.currentTime<(IN.till||0)&&rk.laget===0&&gabber<=0;
   if(intro!==varIntro){varIntro=intro;if(intro){kamtxt.textContent='KAM ★ · FLIPPEN';markera(-1);}else if(spelar&&rk.laget===0&&gabber<=0){valj(0,TPK);}else{valj(sk,last);}}
   if(hel!==senSlag){senSlag=hel;puls=1;nytt=true;
@@ -460,9 +465,9 @@ function bild(){
       st.position.x=p.g.position.x;st.position.z=p.g.position.z;st.rotation.y=sn2;st.position.y=p.g.position.y;}
     else{p.bL.rotation.x=p.bR.rotation.x=0;var hm=hemStol[n];st.position.x+=(hm[0]-st.position.x)*Math.min(1,dt*4);st.position.z+=(hm[1]-st.position.z)*Math.min(1,dt*4);st.position.y=0;}});
   /* kartongregn */
-  for(var li=lador.length-1;li>=0;li--){var L=lador[li], lp=L.m.position, h2=L.s/2;
-    if(L.bort){L.vy+=dt*30;lp.y+=L.vy*dt;L.m.rotation.x+=dt*9;L.m.rotation.z+=dt*7;if(lp.y>45){rum.remove(L.m);lador.splice(li,1);}continue;}
-    L.vy-=24*dt;lp.x+=L.vx*dt;lp.y+=L.vy*dt;lp.z+=L.vz*dt;L.m.rotation.x+=L.wx*dt;L.m.rotation.z+=L.wz*dt;
+  for(var li=lador.length-1;li>=0;li--){var L=lador[li], lp=L.p, h2=L.h/2;
+    if(L.bort){L.vy+=dt*30;lp.y+=L.vy*dt;L.r.x+=dt*9;L.r.z+=dt*7;if(lp.y>45){lador.splice(li,1);}continue;}
+    L.vy-=24*dt;lp.x+=L.vx*dt;lp.y+=L.vy*dt;lp.z+=L.vz*dt;L.r.x+=L.wx*dt;L.r.z+=L.wz*dt;
     var inne=Math.abs(lp.x)<8.1&&lp.z>-5.1&&lp.z<5.15, golvY=h2, pa=false;
     if(inne&&Math.abs(lp.x)<3.25&&Math.abs(lp.z)<.9&&lp.y>.7){golvY=1.03+h2;}
     if(inne&&lp.y<golvY&&L.vy<0){lp.y=golvY;L.vy=-L.vy*.5;L.vx*=.8;L.vz*=.8;L.wx*=.6;L.wz*=.6;if(L.vy<1.2){L.vy=0;}}
@@ -472,7 +477,10 @@ function bild(){
     if(lp.z<-4.7+h2){lp.z=-4.7+h2;L.vz=Math.abs(L.vz)*.6;}
     for(var fi=0;fi<folk.length;fi++){var fp=folk[fi].g.position, dx=lp.x-fp.x, dz=lp.z-fp.z, dd=dx*dx+dz*dz;
       if(dd<.36&&lp.y>fp.y&&lp.y<fp.y+2.25){var dl2=Math.sqrt(dd)||.01;L.vx+=dx/dl2*3.5;L.vz+=dz/dl2*3.5;if(L.vy<2.5){L.vy=rnd(2.5,4.5);}folk[fi].hopp=Math.max(folk[fi].hopp,.8);}}
-    if(lp.y<-45){rum.remove(L.m);lador.splice(li,1);}}
+    if(lp.y<-45){lador.splice(li,1);}}
+  for(var lj=0;lj<lador.length;lj++){var L2=lador[lj];LD.position.copy(L2.p);LD.rotation.copy(L2.r);LD.scale.set(L2.s,L2.h,L2.s);LD.updateMatrix();
+    ladIM.setMatrixAt(lj,LD.matrix);LM.multiplyMatrices(LD.matrix,TEJP);tejpIM.setMatrixAt(lj,LM);}
+  ladIM.count=tejpIM.count=lador.length;if(lador.length){ladIM.instanceMatrix.needsUpdate=true;tejpIM.instanceMatrix.needsUpdate=true;}
   stolar.forEach(function(st,n){if(balK>.5&&n<linje.length){return;}st.rotation.y+=dt*(G?8:(n%2?.5:-.5))*(tyrol||G?1:.25);});
   bjornar.forEach(function(bj){var u=Math.max(0,Math.sin(db*Math.PI/2+bj.off*1.6));bj.hd.position.y=.55+u*.75;bj.hd.rotation.z=Math.sin(db*Math.PI+bj.off)*.3;bj.hd.rotation.y=Math.sin(nu+bj.off)*.5;});
   staty.scale.setScalar(1+puls*(G?.08:.02));staty.rotation.y=.45+(G?Math.sin(nu*30)*.06:0);
@@ -543,6 +551,8 @@ function portratt(){if(!utanBild.length){return;}var R=240, rt=new T.WebGLRender
     renderer.setRenderTarget(null);
     for(var y=0;y<R;y++){im.data.set(px.subarray((R-1-y)*R*4,(R-y)*R*4),y*R*4);}g.putImageData(im,0,0);u[0].src=cv.toDataURL('image/jpeg',.85);});
   rt.dispose();}
+scene.traverse(function(o){if(o.isMesh&&o.castShadow&&!o.isInstancedMesh){if(!o.geometry.boundingSphere){o.geometry.computeBoundingSphere();}
+  var sk=new T.Vector3();o.getWorldScale(sk);if(o.geometry.boundingSphere.radius*Math.max(sk.x,sk.y,sk.z)<.16){o.castShadow=false;}}});
 valj(0,8);
 if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){ritaTavla(tTavla.image.getContext('2d'),1024,400);tTavla.needsUpdate=true;});}
 setTimeout(portratt,60);
