@@ -118,6 +118,7 @@ window.BEZOZ_VARLD = {
   nedrakning: 5,
   musik_vid_nedrakning: 0.65,      // låten glider ner till den här volymen under nedräkningen (1 = ingen sänkning)
   kartonger_per_tryck: 2,
+  serie_paus: 5,                   // sekunder utan tryck innan nästa tryck räknas som en ny serie (ny LEVERANS)
   chans_stort_drop: 0.15,          // chansen att ett tryck ger ett stort drop (5 till 10 kartonger). Första trycket ger alltid ett             // raketen räknar ner från den här siffran, en siffra varannan takt
   flipp_takter: 16,          // hur länge FLIPPA håller i sig om ingen röstfil finns
 

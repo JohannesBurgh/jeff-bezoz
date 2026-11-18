@@ -11,7 +11,7 @@ var lugn=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matche
 var canvas=document.getElementById('scen'), renderer;
 try{renderer=new T.WebGLRenderer({canvas:canvas,antialias:true});}catch(e){fel.style.display='block';return;}
 var DPR=Math.min(devicePixelRatio||1,2);renderer.setPixelRatio(DPR);
-renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFShadowMap;
 var scene=new T.Scene(), RYMD=new T.Color(0x130d0a), ALP=new T.Color(0x8fd0ff);
 scene.background=RYMD.clone();scene.fog=new T.Fog(0x130d0a,40,110);
 var cam=new T.PerspectiveCamera(50,1,.1,300);
@@ -401,7 +401,7 @@ $('flippa').onclick=function(){
   document.body.classList.add('gabber');valj(K_PROF,16);markera(-1);};
 $('raket').onclick=function(){if(rk.laget===0){ljudmotor();rensaLador();rk.laget=1;rk.start=Math.floor(slagNu())+1;rk.sist=-1;volym();valj(K_RAKET,34);markera(-1);}};
 /* kartongregn: varje tryck släpper ner fler kartonger som studsar runt i takt. Nollställs när man byter läge */
-var linje=folk.filter(function(p){return p.d.dans!=='flipp';}).sort(function(a,b){return a.d.plats[0]-b.d.plats[0];}), lador=[], tryck=0;
+var linje=folk.filter(function(p){return p.d.dans!=='flipp';}).sort(function(a,b){return a.d.plats[0]-b.d.plats[0];}), lador=[], tryck=0, senTryck=0;
 /* alla kartonger ritas som två instanser (kartong + tejp): ett tryck skapar inget nytt, så man kan peppra på */
 var LMAX=V.max_kartonger||220, ladGeo=new T.BoxGeometry(1,1,1);
 var ladIM=new T.InstancedMesh(ladGeo,mKartong,LMAX), tejpIM=new T.InstancedMesh(ladGeo,mTejp,LMAX);
@@ -410,10 +410,11 @@ var LD=new T.Object3D(), LM=new T.Matrix4(), TEJP=new T.Matrix4().compose(new T.
 function slappLada(){if(lador.length>=LMAX){lador.shift();}var st=rnd(.34,.78);
   lador.push({p:new T.Vector3(rnd(-6.6,6.6),rnd(9,15),rnd(-3.8,4.3)),r:new T.Euler(rnd(0,3),rnd(0,3),rnd(0,3)),s:st,h:st*rnd(.7,1),vx:rnd(-2,2),vy:rnd(-3,0),vz:rnd(-2,2),wx:rnd(-5,5),wz:rnd(-5,5),bort:0});}
 function rensaLador(){lador.forEach(function(l){l.bort=1;l.vy=rnd(9,16);});tryck=0;}
-$('kartong').onclick=function(){ljudmotor();tryck++;
-  /* första trycket och ibland när man minst anar det: ett stort drop */
-  var stort=tryck===1||(tryck>3&&Math.random()<(V.chans_stort_drop||.15)), antal=stort?5+Math.floor(Math.random()*6):(V.kartonger_per_tryck||2);
-  kartongljud();if(stort){setTimeout(kartongljud,90);setTimeout(kartongljud,200);duns();stor('LEVERANS');}
+$('kartong').onclick=function(){ljudmotor();var nuT=performance.now()/1000;
+  /* en ny serie börjar efter en paus eller ett lägesbyte: då blir det ett stort drop med LEVERANS */
+  if(nuT-senTryck>(V.serie_paus||5)){tryck=0;}senTryck=nuT;tryck++;
+  var forst=tryck===1, stort=forst||(tryck>3&&Math.random()<(V.chans_stort_drop||.15)), antal=stort?5+Math.floor(Math.random()*6):(V.kartonger_per_tryck||2);
+  kartongljud();if(stort){setTimeout(kartongljud,90);setTimeout(kartongljud,200);duns();}if(forst){stor('LEVERANS');}
   for(var q=0;q<antal;q++){slappLada();}
   if(tryck===1){valj(0,16);markera(-1);}};
 /* stolbaletten */
@@ -440,7 +441,7 @@ function bild(){
   requestAnimationFrame(bild);
   var nu=performance.now()/1000, rdt=nu-forra, dt=Math.min(.05,rdt);forra=nu;
   if(!document.hidden&&rdt<.5){fpsSum+=rdt;fpsN++;if(fpsN>=90){var snitt=fpsSum/fpsN;fpsSum=fpsN=0;
-    if(snitt>.024&&DPR>1){DPR=Math.max(1,DPR-.25);renderer.setPixelRatio(DPR);storlek();}}}
+    if(snitt>.045&&DPR>1){DPR=Math.max(1,DPR-.25);renderer.setPixelRatio(DPR);storlek();}}}
   var b=slagNu(), hel=Math.floor(b), nytt=false, IN=V.intro||{}, intro=spelar&&ljud.currentTime<(IN.till||0)&&rk.laget===0&&gabber<=0;
   if(intro!==varIntro){varIntro=intro;if(intro){kamtxt.textContent='KAM ★ · FLIPPEN';markera(-1);}else if(spelar&&rk.laget===0&&gabber<=0){valj(0,TPK);}else{valj(sk,last);}}
   if(hel!==senSlag){senSlag=hel;puls=1;nytt=true;
@@ -556,6 +557,8 @@ scene.traverse(function(o){if(o.isMesh&&o.castShadow&&!o.isInstancedMesh){if(!o.
 valj(0,8);
 if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){ritaTavla(tTavla.image.getContext('2d'),1024,400);tTavla.needsUpdate=true;});}
 setTimeout(portratt,60);
+setTimeout(function(){try{LD.position.set(0,-200,0);LD.scale.set(1,1,1);LD.rotation.set(0,0,0);LD.updateMatrix();ladIM.setMatrixAt(0,LD.matrix);tejpIM.setMatrixAt(0,LD.matrix);
+  ladIM.count=tejpIM.count=1;ladIM.instanceMatrix.needsUpdate=tejpIM.instanceMatrix.needsUpdate=true;renderer.compile(scene,cam);}catch(e){}},120);
 window.BEZOZ={valj:valj,DANS:DANS,folk:folk,slagNu:slagNu,tystna:function(){if(vill){vill=false;ljud.pause();stopp();}}};
 bild();
 })();
