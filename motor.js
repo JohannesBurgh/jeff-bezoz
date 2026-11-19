@@ -328,13 +328,15 @@ function nastaKam(){var pl=RUNDA.indexOf(sk);return RUNDA[(pl+1)%NK];}
 $('kam').onclick=function(){valj(nastaKam(),16);markera(-1);};
 
 /* ---------- personalkort ---------- */
-var kortEl=$('kort'), kortKn=[], kortY=null, utanBild=[];
+var kortEl=$('kort'), kortKn=[], kortAktiv=-1, utanBild=[];
 V.personal.forEach(function(d,n){var k=document.createElement('button');k.className='k';
   k.innerHTML='<img alt=""><small></small><strong></strong><p></p><em></em>';
   if(d.bild){k.children[0].src=d.bild;}else{utanBild.push([k.children[0],n]);}
   k.children[1].textContent=d.befattning;k.children[2].textContent=d.namn;k.children[3].textContent=d.bio;k.children[4].textContent=d.stampel;
-  k.onclick=function(){valj(persKam[n],32);markera(n);kortY=scrollY;};kortEl.appendChild(k);kortKn.push(k);});
-function markera(n){kortKn.forEach(function(k,j){k.classList.toggle('vald',n===j);});}
+  k.onclick=function(){if(kortAktiv===n){markera(-1);valj(0,8);return;}valj(persKam[n],0);markera(n);};kortEl.appendChild(k);kortKn.push(k);});
+/* närbilden står kvar tills man trycker på kortet igen, ett annat kort, en knapp, eller lämnar personalsektionen */
+function markera(n){kortAktiv=n;kortKn.forEach(function(k,j){k.classList.toggle('vald',n===j);});}
+if(window.IntersectionObserver&&$('personal')){new IntersectionObserver(function(e){if(kortAktiv>=0&&e[0].intersectionRatio<.2){markera(-1);last=2;}},{threshold:[0,.2,.5]}).observe($('personal'));}
 
 /* ---------- låten och klockan ---------- */
 var ljud=new Audio(), spelar=false, vill=false, klock0=performance.now()/1000, bLjud=$('ljud');
@@ -427,7 +429,7 @@ var merEl=$('mer');
 var scrollStart=scrollY, scrollSen=0;
 addEventListener('scroll',function(){if(merEl){merEl.classList.toggle('borta',scrollY>50);}
   var nuS=performance.now()/1000, ny=nuS-scrollSen>2.5;scrollSen=nuS;if(ny){scrollStart=scrollY;}
-  if(kortY!==null){if(Math.abs(scrollY-kortY)<240){return;}kortY=null;markera(-1);}
+  if(kortAktiv>=0){return;}
   if(rk.laget!==0||gabber>0||varIntro){return;}
   if(Math.abs(scrollY-scrollStart)<120){return;}scrollStart=-1e9;
   if(sk!==0){valj(0,V.takter_helbild_vid_scroll||16);}},{passive:true});
@@ -451,7 +453,7 @@ function bild(){
   if(hel!==senSlag){senSlag=hel;puls=1;nytt=true;
     if(gabber>0){gabber--;if(ac){try{spark(ac.currentTime+.01);spark(ac.currentTime+.01+SPB/2);}catch(e){}}
       if(gabber===0){document.body.classList.remove('gabber');if(flNu){try{flNu.a.pause();}catch(e){}flippSlut();}}}
-    if(intro){}else if(last>0){last--;}else if(hel%TPK===0){valj(nastaKam(),0);markera(-1);}
+    if(intro||kortAktiv>=0){}else if(last>0){last--;}else if(hel%TPK===0){valj(nastaKam(),0);markera(-1);}
     takt.textContent=(gabber>0?'GABBER · ':tyrol?'TYROLEN · ':'')+'TAKT '+(Math.floor(hel/4)%99+1)+'.'+(hel%4+1);}
   puls*=Math.pow(.004,dt);
   var G=gabber>0, db=G?b*2:b, k={b:b,db:db,hel:hel,puls:puls,nu:nu,dt:dt,G:G,tyrol:tyrol,skrik:-1,intro:intro};
