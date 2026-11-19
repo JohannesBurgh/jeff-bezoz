@@ -433,10 +433,10 @@ addEventListener('scroll',function(){if(merEl){merEl.classList.toggle('borta',sc
   if(sk!==0){valj(0,V.takter_helbild_vid_scroll||16);}},{passive:true});
 
 /* ---------- storlek ---------- */
-var avst=1,avstV=1,sta=0;
+var avst=1,avstV=1,sta=0,vyOff=null;
 function storlek(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;cam.fov=w<h?62:48;
   sta=w<h?1:0;avst=w<h?1+(1-w/h)*(V.mobil_avstand===undefined?.6:V.mobil_avstand):1;avstV=w<h?1+(1-w/h)*1.25:1;
-  if(w<h){cam.setViewOffset(w,h,0,h*(V.mobil_hojning||.07),w,h);}else if(w/h>1.25){cam.setViewOffset(w,h,-w*.17,0,w,h);}else{cam.clearViewOffset();}cam.updateProjectionMatrix();}
+  if(w<h){vyOff=null;}else if(w/h>1.25){cam.setViewOffset(w,h,-w*.17,0,w,h);}else{cam.clearViewOffset();}cam.updateProjectionMatrix();}
 addEventListener('resize',storlek);storlek();
 
 /* ---------- bildrutan ---------- */
@@ -538,6 +538,8 @@ function bild(){
   regn.forEach(function(o){if(G){o.y-=o.v*dt;if(o.y<.3){o.y=rnd(12,24);o.m.position.x=rnd(-7.5,7.5);o.m.position.z=rnd(-4.5,6);}o.m.position.y=o.y;o.m.rotation.x+=o.rx*dt;o.m.rotation.z+=o.rz*dt;}else{o.m.position.y=-60;}});
   if(!(rk.laget===3&&rk.slog&&rk.t<1.32)){blixt.style.opacity=(G&&!lugn&&puls>.75)?.22:0;}
   /* kamera */
+  if(sta){var vw=innerWidth, vh=innerHeight, tt=Math.min(1,Math.max(0,scrollY/(vh*.6))), Ht=V.mobil_hojning_topp===undefined?-.16:V.mobil_hojning_topp, Hn=V.mobil_hojning===undefined?-.05:V.mobil_hojning, oy=Ht+(Hn-Ht)*tt;
+    if(vyOff===null||Math.abs(oy-vyOff)>.002){vyOff=oy;cam.setViewOffset(vw,vh,0,vh*oy,vw,vh);cam.updateProjectionMatrix();}}
   var S=skott[sk];
   if(intro&&IN.kameror&&IN.kameror.length){var it=ljud.currentTime/(IN.till||15), ik=IN.kameror[Math.min(IN.kameror.length-1,Math.floor(it*IN.kameror.length))];S={p:ik.p,l:ik.l,upp:ik.upp};}
   tp.set(S.p[0],S.p[1],S.p[2]);tl.set(S.l[0],S.l[1],S.l[2]);

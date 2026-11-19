@@ -101,7 +101,7 @@ window.BEZOZ_VARLD = {
   kameror: [
     { namn: 'HELBILD',      p: [0, 7.5, 17.5],   l: [0, 2.4, 0],        vid: true, upp: 5 },
     { namn: 'PROFESSORN',   p: [0.6, 3.7, 4.9],  l: [0, 2.7, 0],        upp: 0.6 },
-    { namn: 'RAKETEN',      p: [0.9, 3.0, 2.9],  l: [6.4, 2.6, -2.2],   upp: 1.3 },
+    { namn: 'RAKETEN',      p: [0.9, 3.0, 2.9],  l: [6.4, 2.05, -2.2],  upp: 1.3 },
     { namn: 'FLOSSLINJEN',  p: [-6.4, 2.2, 6.6], l: [0.5, 1.4, 2.8],    upp: 1 },
     { namn: 'STATYN',       p: [1.5, 3.1, 3.7],  l: [-2.2, 2.4, -1.6],  upp: 0.6 },   // statyn bakom professorn
     { namn: 'OVANIFRÅN',    p: [0, 13.5, 10.5],  l: [0, 0.6, 0.2],      vid: true, upp: 2 },
@@ -115,7 +115,8 @@ window.BEZOZ_VARLD = {
   ] },
   takter_per_kamera: 8,
   takter_helbild_vid_scroll: 16,   // så länge står kameran still i helbild efter att man scrollat
-  mobil_hojning: -0.07,            // i mobilen: flyttar bilden så att det kameran tittar på hamnar under texten och ovanför knapparna
+  mobil_hojning_topp: -0.16,       // i mobilen, högst upp på sidan: hur långt ner scenen ligger (under knappen Se musikvideon)
+  mobil_hojning: -0.05,            // i mobilen, längre ner på sidan: var scenen ligger mellan texten och knapparna
   mobil_upp_faktor: 0,             // i mobilen: hur mycket av kamerornas upp-värde som används
   mobil_avstand: 0.6,              // i mobilen: hur mycket längre bak kamerorna står (0 = som på datorn)
   nedrakning: 5,
