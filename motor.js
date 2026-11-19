@@ -423,16 +423,20 @@ bBa.onclick=function(){rensaLador();balett=!balett;bBa.classList.toggle('pa',bal
 
 /* ---------- scroll: lugn helbild medan man läser, sedan börjar kamerorna växla igen ---------- */
 var merEl=$('mer');
+/* bara när man börjar scrolla efter en stund stilla, och bara en gång per scrollning: små ryck (adressfältet i mobilen) räknas inte */
+var scrollStart=scrollY, scrollSen=0;
 addEventListener('scroll',function(){if(merEl){merEl.classList.toggle('borta',scrollY>50);}
+  var nuS=performance.now()/1000, ny=nuS-scrollSen>2.5;scrollSen=nuS;if(ny){scrollStart=scrollY;}
   if(kortY!==null){if(Math.abs(scrollY-kortY)<240){return;}kortY=null;markera(-1);}
   if(rk.laget!==0||gabber>0||varIntro){return;}
-  if(sk!==0){valj(0,V.takter_helbild_vid_scroll||32);}else{last=Math.max(last,V.takter_helbild_vid_scroll||32);}},{passive:true});
+  if(Math.abs(scrollY-scrollStart)<120){return;}scrollStart=-1e9;
+  if(sk!==0){valj(0,V.takter_helbild_vid_scroll||16);}},{passive:true});
 
 /* ---------- storlek ---------- */
 var avst=1,avstV=1,sta=0;
 function storlek(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;cam.fov=w<h?62:48;
-  sta=w<h?1:0;avst=w<h?1+(1-w/h)*.3:1;avstV=w<h?1+(1-w/h)*1.25:1;
-  if(w<h){cam.setViewOffset(w,h,0,-h*.1,w,h);}else if(w/h>1.25){cam.setViewOffset(w,h,-w*.17,0,w,h);}else{cam.clearViewOffset();}cam.updateProjectionMatrix();}
+  sta=w<h?1:0;avst=w<h?1+(1-w/h)*(V.mobil_avstand===undefined?.6:V.mobil_avstand):1;avstV=w<h?1+(1-w/h)*1.25:1;
+  if(w<h){cam.setViewOffset(w,h,0,h*(V.mobil_hojning||.07),w,h);}else if(w/h>1.25){cam.setViewOffset(w,h,-w*.17,0,w,h);}else{cam.clearViewOffset();}cam.updateProjectionMatrix();}
 addEventListener('resize',storlek);storlek();
 
 /* ---------- bildrutan ---------- */
@@ -538,7 +542,7 @@ function bild(){
   if(intro&&IN.kameror&&IN.kameror.length){var it=ljud.currentTime/(IN.till||15), ik=IN.kameror[Math.min(IN.kameror.length-1,Math.floor(it*IN.kameror.length))];S={p:ik.p,l:ik.l,upp:ik.upp};}
   tp.set(S.p[0],S.p[1],S.p[2]);tl.set(S.l[0],S.l[1],S.l[2]);
   if(sk===K_RAKET&&rk.laget===2){tl.y=Math.min(26,2.6+rk.y*.6);}
-  tp.sub(tl).multiplyScalar(S.vid?avstV:avst).add(tl);if(sta&&S.upp){tl.y+=S.upp;}
+  tp.sub(tl).multiplyScalar(S.vid?avstV:avst).add(tl);if(sta&&S.upp){tl.y+=S.upp*(V.mobil_upp_faktor===undefined?.35:V.mobil_upp_faktor);}
   if(manKam>0){tl.copy(mane.position);if(sta){tl.y+=2.6;}tp.set(mane.position.x*.45,10,mane.position.z*.45);}
   var kk=1-Math.pow(manKam>0?.0005:.02,dt);cp.lerp(tp,kk);cl.lerp(tl,kk);var sv=lugn?0:1;
   cam.position.set(cp.x+Math.sin(nu*.5)*.35*sv+(G||rk.laget===2?rnd(-.12,.12):0),cp.y+Math.sin(nu*.37)*.2*sv+puls*.06*sv+(G?rnd(-.12,.12):0),cp.z);

@@ -114,7 +114,10 @@ window.BEZOZ_VARLD = {
     { p: [0.7, 3.3, 2.3],   l: [0, 3.05, 0], upp: 0.3 }
   ] },
   takter_per_kamera: 8,
-  takter_helbild_vid_scroll: 32,   // så länge står kameran still i helbild efter att man scrollat
+  takter_helbild_vid_scroll: 16,   // så länge står kameran still i helbild efter att man scrollat
+  mobil_hojning: -0.07,            // i mobilen: flyttar bilden så att det kameran tittar på hamnar under texten och ovanför knapparna
+  mobil_upp_faktor: 0,             // i mobilen: hur mycket av kamerornas upp-värde som används
+  mobil_avstand: 0.6,              // i mobilen: hur mycket längre bak kamerorna står (0 = som på datorn)
   nedrakning: 5,
   musik_vid_nedrakning: 0.65,      // låten glider ner till den här volymen under nedräkningen (1 = ingen sänkning)
   kartonger_per_tryck: 2,
